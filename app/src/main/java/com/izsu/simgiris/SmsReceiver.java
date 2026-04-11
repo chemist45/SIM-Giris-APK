@@ -20,7 +20,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
     // GAS URL — tüm tesisler için aynı
     private static final String GAS_URL =
-        "https://script.google.com/macros/s/AKfycbwEbdaQ1MXdJT3Wf7NI1OQB6Om67nup5e5x3RPdKzxdXJNYbg34iYkEkFnXEmuhI2Z6aQ/exec";
+        "https://script.google.com/macros/s/AKfycbzJkSZCvfIoZ9GE-fJNDEGeuWL4mT64Ho4FsSpt-jNZW1YGcWGbwSVAluLz3izbCm-HiA/exec";
 
     @Override
     public void onReceive(Context context, Intent intent) {

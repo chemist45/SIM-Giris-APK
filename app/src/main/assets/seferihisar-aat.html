@@ -494,7 +494,7 @@
         { isim: 'Eren ÇOBAN', telefon: '05065726459' }
       ]
     };
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwEbdaQ1MXdJT3Wf7NI1OQB6Om67nup5e5x3RPdKzxdXJNYbg34iYkEkFnXEmuhI2Z6aQ/exec';
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbzJkSZCvfIoZ9GE-fJNDEGeuWL4mT64Ho4FsSpt-jNZW1YGcWGbwSVAluLz3izbCm-HiA/exec';
     if (window.AndroidNative) AndroidNative.setActiveTesis(TESİS.id);
 
     let seciliAlici = null;
@@ -571,7 +571,7 @@
     async function simGiris() {
       if (seciliAlici === null) { toast('Lütfen önce bir alıcı seçin', 'err'); return; }
       const alici = TESİS.alicilar[seciliAlici];
-      if (GAS_URL !== 'https://script.google.com/macros/s/AKfycbwEbdaQ1MXdJT3Wf7NI1OQB6Om67nup5e5x3RPdKzxdXJNYbg34iYkEkFnXEmuhI2Z6aQ/exec') {
+      if (GAS_URL !== 'https://script.google.com/macros/s/AKfycbzJkSZCvfIoZ9GE-fJNDEGeuWL4mT64Ho4FsSpt-jNZW1YGcWGbwSVAluLz3izbCm-HiA/exec') {
         fetch(GAS_URL, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'setRecipient', tesis: TESİS.id, telefon: alici.telefon, isim: alici.isim })
