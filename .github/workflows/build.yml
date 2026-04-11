@@ -19,6 +19,18 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: İmzalama Anahtarı Oluştur
+      run: |
+        keytool -genkeypair \
+          -alias simgiris \
+          -keypass simgiris2024 \
+          -keystore simgiris.keystore \
+          -storepass simgiris2024 \
+          -dname "CN=IZSU Yarimada, OU=Tesisler, O=IZSU, L=Izmir, ST=Izmir, C=TR" \
+          -keyalg RSA \
+          -keysize 2048 \
+          -validity 10000
+
     - name: Gradle kur ve Wrapper oluştur
       run: |
         wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip -O gradle.zip
@@ -34,12 +46,26 @@ jobs:
           ~/.gradle/wrapper
         key: gradle-${{ hashFiles('**/*.gradle*') }}
 
-    - name: APK derle
-      run: ./gradlew assembleDebug --stacktrace
+    - name: Release APK Derle
+      run: ./gradlew assembleRelease --stacktrace
 
-    - name: APK dosyasını yükle
+    - name: APK İmzala
+      run: |
+        jarsigner -verbose \
+          -sigalg SHA256withRSA \
+          -digestalg SHA-256 \
+          -keystore simgiris.keystore \
+          -storepass simgiris2024 \
+          -keypass simgiris2024 \
+          app/build/outputs/apk/release/app-release-unsigned.apk \
+          simgiris
+        ${ANDROID_HOME}/build-tools/33.0.1/zipalign -v 4 \
+          app/build/outputs/apk/release/app-release-unsigned.apk \
+          SIMGiris.apk
+
+    - name: İmzalı APK'yı yükle
       uses: actions/upload-artifact@v4
       with:
-        name: SIM-Giris-APK
-        path: app/build/outputs/apk/debug/app-debug.apk
+        name: SIMGiris-Imzali
+        path: SIMGiris.apk
         retention-days: 30
