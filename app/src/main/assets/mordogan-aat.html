@@ -502,6 +502,31 @@
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbzJkSZCvfIoZ9GE-fJNDEGeuWL4mT64Ho4FsSpt-jNZW1YGcWGbwSVAluLz3izbCm-HiA/exec';
     if (window.AndroidNative) AndroidNative.setActiveTesis(TESİS.id);
 
+    // APK modunda SMS kurulum ekranını sadeleştir
+    function apkModuAyarla() {
+      if (!window.AndroidNative) return;
+      const tabIos = document.getElementById('tabIos');
+      if (tabIos) tabIos.style.display = 'none';
+      const smsTabs = document.getElementById('smsTabs');
+      if (smsTabs) smsTabs.style.display = 'none';
+      const panelAndroid = document.getElementById('panelAndroid');
+      if (panelAndroid) {
+        panelAndroid.innerHTML =
+          '<div style="background:#0f2818;border:1px solid #22c55e;border-radius:10px;padding:16px;text-align:center;margin-bottom:14px;">' +
+            '<div style="font-size:36px;margin-bottom:10px;">✅</div>' +
+            '<div style="font-size:15px;font-weight:700;color:#22c55e;margin-bottom:8px;">SMS İletimi Aktif</div>' +
+            '<p style="font-size:13px;color:#86efac;line-height:1.7;">Bu uygulama SİM 2FA SMS\'lerini otomatik olarak iletmektedir.<br>Ek uygulama gerekmez.</p>' +
+          '</div>' +
+          '<div class="sms-adim">' +
+            '<div class="sms-adim-no">BAĞLANTI TESTİ</div>' +
+            '<p>GAS backend bağlantısını test edin.</p>' +
+            '<button class="sms-btn sms-btn-test" onclick="smsBaglantiTest()">🔗 Bağlantı Testi</button>' +
+            '<div id="smsTestSonuc"></div>' +
+          '</div>';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', apkModuAyarla);
+
     let seciliAlici = null;
     let adminGirisli = false;
     let deferredInstallPrompt = null;
