@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@color/launcher_background"/>
-    <foreground>
-        <inset android:drawable="@drawable/ic_launcher_fg" android:inset="16%"/>
-    </foreground>
-</adaptive-icon>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path android:fillColor="#020c18"
+        android:pathData="M0,0h48v48H0z"/>
+    <path android:fillColor="#0ea5e9"
+        android:pathData="M24,8C18,8 13,13 13,19L13,22L10,22L10,40L38,40L38,22L35,22L35,19C35,13 30,8 24,8ZM24,12C27.9,12 31,15.1 31,19L31,22L17,22L17,19C17,15.1 20.1,12 24,12ZM24,28C25.7,28 27,29.3 27,31C27,32.7 25.7,34 24,34C22.3,34 21,32.7 21,31C21,29.3 22.3,28 24,28Z"/>
+</vector>
