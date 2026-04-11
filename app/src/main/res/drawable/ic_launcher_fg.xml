@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Kilit simgesi - SİM Giriş -->
+    <path
+        android:fillColor="#0ea5e9"
+        android:pathData="M54,20 C44,20 36,28 36,38 L36,44 L30,44 L30,80 L78,80 L78,44 L72,44 L72,38 C72,28 64,20 54,20 Z M54,28 C59.5,28 64,32.5 64,38 L64,44 L44,44 L44,38 C44,32.5 48.5,28 54,28 Z M54,56 C57.3,56 60,58.7 60,62 C60,65.3 57.3,68 54,68 C50.7,68 48,65.3 48,62 C48,58.7 50.7,56 54,56 Z"/>
+</vector>
