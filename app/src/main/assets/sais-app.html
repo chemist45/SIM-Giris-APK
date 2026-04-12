@@ -5,175 +5,282 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>SİM Giriş — SAİS Sorumlusu</title>
+<meta name="theme-color" content="#020c18">
+<title>SAİS Sorumlusu — SİM Giriş</title>
 <style>
 :root{--bg:#020c18;--surf:#041428;--brd:#1e293b;--pri:#0ea5e9;--ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--txt:#e2e8f0;--mut:#94a3b8;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
-.hdr{background:linear-gradient(135deg,#041428,#020c18);border-bottom:1px solid var(--brd);padding:16px;text-align:center;}
-.hdr-brand{font-size:11px;font-weight:800;color:var(--pri);letter-spacing:3px;margin-bottom:2px;}
-.hdr-title{font-size:15px;font-weight:700;}
-.hdr-sub{font-size:11px;color:var(--mut);margin-top:2px;}
-.scr{display:none;padding:16px;max-width:480px;margin:0 auto;}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;}
+.hdr{background:linear-gradient(160deg,#0ea5e9,#0284c7);padding:20px 16px 18px;text-align:center;flex-shrink:0;}
+.hdr-logo{font-size:32px;margin-bottom:4px;}
+.hdr-brand{font-size:11px;font-weight:800;color:rgba(255,255,255,0.8);letter-spacing:3px;margin-bottom:2px;}
+.hdr-title{font-size:17px;font-weight:800;color:#fff;}
+.hdr-sub{font-size:11px;color:rgba(255,255,255,0.75);margin-top:3px;}
+main{flex:1;padding:16px;max-width:480px;margin:0 auto;width:100%;}
+.scr{display:none;}
 .scr.on{display:block;}
-.scr-ttl{font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.kart{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:18px 12px;cursor:pointer;text-align:center;transition:transform .12s;}
+.sec-ttl{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.kart{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:18px 12px;cursor:pointer;text-align:center;transition:transform .12s,border-color .15s;}
 .kart:active{transform:scale(.96);}
 .kart .ikon{font-size:26px;margin-bottom:8px;}
 .kart .ad{font-size:13px;font-weight:700;}
 .back{background:none;border:none;color:var(--mut);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;margin-bottom:14px;padding:4px 0;}
-.badge{display:inline-flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--brd);border-radius:20px;padding:7px 16px;margin-bottom:16px;font-size:13px;font-weight:700;}
-.aktif-banner{background:linear-gradient(135deg,#052e16,#064e24);border:1px solid #22c55e;border-radius:12px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
-.aktif-dot{width:12px;height:12px;background:#22c55e;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px #22c55e;}
-.aktif-txt{font-size:13px;font-weight:700;color:#22c55e;line-height:1.5;}
-.aktif-alt{font-size:11px;color:#4ade80;margin-top:2px;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--brd);border-radius:20px;padding:7px 16px;margin-bottom:14px;font-size:13px;font-weight:700;}
+/* Bannerlar */
+.banner{border-radius:12px;padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+.banner-ok{background:linear-gradient(135deg,#052e16,#064e24);border:1px solid #22c55e;}
+.banner-apk{background:linear-gradient(135deg,#04213a,#062a50);border:1px solid #0ea5e9;}
+.b-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.b-dot-ok{background:#22c55e;box-shadow:0 0 7px #22c55e;}
+.b-dot-apk{background:#0ea5e9;box-shadow:0 0 7px #0ea5e9;}
+.b-txt{font-size:13px;font-weight:700;line-height:1.5;}
+.b-txt-ok{color:#22c55e;}
+.b-txt-apk{color:#0ea5e9;}
+.b-alt{font-size:11px;margin-top:2px;}
+.b-alt-ok{color:#4ade80;}
+.b-alt-apk{color:#38bdf8;}
+/* Kartlar */
 .card{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:14px;margin-bottom:12px;}
 .card-ttl{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+/* Adımlar */
+.adim-liste{display:flex;flex-direction:column;gap:0;}
+.adim{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--brd);}
+.adim:last-child{border-bottom:none;}
+.adim-no{width:22px;height:22px;background:var(--pri);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;margin-top:2px;}
+.adim-txt{font-size:13px;line-height:1.65;color:var(--txt);}
+.adim-txt small{color:var(--mut);}
+.adim-txt b{color:var(--txt);}
+/* Butonlar */
 .btn{width:100%;padding:14px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;transition:opacity .15s;}
 .btn:active{opacity:.85;}
 .btn-pri{background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;}
 .btn-sec{background:var(--surf);border:1px solid var(--brd);color:var(--txt);}
-.btn-ios{background:linear-gradient(135deg,#1d1d1f,#2d2d2f);border:1px solid #3d3d3f;color:#fff;}
-.adim-liste{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
-.adim{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--brd);}
-.adim:last-child{border-bottom:none;}
-.adim-no{width:22px;height:22px;background:var(--pri);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;margin-top:1px;}
-.adim-txt{font-size:13px;line-height:1.6;color:var(--txt);}
-.adim-txt small{color:var(--mut);}
-.test-sonuc{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:12px;margin-bottom:8px;font-size:13px;text-align:center;min-height:44px;display:flex;align-items:center;justify-content:center;gap:8px;}
-.platform-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:10px;}
-.platform-ios{background:#1d1d1f;color:#a1a1aa;border:1px solid #3d3d3f;}
-.platform-android{background:#0c2c1e;color:#4ade80;border:1px solid #14532d;}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:#e2e8f0;padding:10px 22px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
+.btn-ios{background:linear-gradient(135deg,#1c1c1e,#2c2c2e);border:1px solid #3c3c3e;color:#fff;}
+/* Platform badge */
+.plt-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:10px;}
+.plt-ios{background:#1c1c1e;color:#a1a1aa;border:1px solid #3c3c3e;}
+.plt-android{background:#0c2c1e;color:#4ade80;border:1px solid #14532d;}
+.plt-apk{background:#04213a;color:#38bdf8;border:1px solid #0c3a5a;}
+/* Bağlantı testi */
+.test-box{background:#020c18;border:1px solid var(--brd);border-radius:10px;padding:13px;margin-bottom:8px;font-size:13px;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;gap:8px;transition:border-color .3s;}
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#e2e8f0;padding:10px 22px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
 .toast.on{opacity:1;}
+/* Footer */
+footer{text-align:center;font-size:11px;color:var(--mut);padding:18px 16px;border-top:1px solid var(--brd);}
 </style>
 </head>
 <body>
 
 <div class="hdr">
+  <div class="hdr-logo">📱</div>
   <div class="hdr-brand">YARIMADA SİM</div>
-  <div class="hdr-title">SAİS Sorumlusu Paneli</div>
+  <div class="hdr-title">SAİS Sorumlusu</div>
   <div class="hdr-sub">SMS İletim Kurulumu</div>
 </div>
 
-<!-- Ekran 1: Tesis Seçimi -->
-<div class="scr on" id="s1">
-  <div class="scr-ttl">Tesisini Seç</div>
-  <div class="grid" id="tesisGrid"></div>
-</div>
+<main>
+  <!-- Ekran 1: Tesis Seç -->
+  <div class="scr on" id="s1">
+    <div class="sec-ttl">Tesisini Seç</div>
+    <div class="grid" id="tesisGrid"></div>
+  </div>
 
-<!-- Ekran 2: Kurulum Paneli -->
-<div class="scr" id="s2">
-  <button class="back" onclick="geri()">← Geri</button>
-  <div class="badge" id="badge"></div>
+  <!-- Ekran 2: Kurulum -->
+  <div class="scr" id="s2">
+    <button class="back" onclick="geri()">← Geri</button>
+    <div class="badge" id="badge"></div>
 
-  <!-- SMS Aktif Banner -->
-  <div class="aktif-banner" id="aktifBanner">
-    <div class="aktif-dot"></div>
-    <div>
-      <div class="aktif-txt">SMS İletimi Aktif</div>
-      <div class="aktif-alt" id="aktifAlt">Bu telefon 2FA SMS'lerini sisteme iletiyor</div>
+    <!-- APK modunda: otomatik iletim mesajı -->
+    <div class="banner banner-apk" id="apkBanner" style="display:none">
+      <div class="b-dot b-dot-apk"></div>
+      <div>
+        <div class="b-txt b-txt-apk">SMS Otomatik İletiliyor</div>
+        <div class="b-alt b-alt-apk" id="apkBannerAlt">Uygulama arka planda SMS'leri sisteme iletiyor</div>
+      </div>
+    </div>
+
+    <!-- Normal mod: SMS aktif banner -->
+    <div class="banner banner-ok" id="aktifBanner" style="display:none">
+      <div class="b-dot b-dot-ok"></div>
+      <div>
+        <div class="b-txt b-txt-ok">SMS İletimi Aktif</div>
+        <div class="b-alt b-alt-ok" id="aktifBannerAlt">Bu telefon 2FA SMS'lerini sisteme iletecek</div>
+      </div>
+    </div>
+
+    <!-- Platform paneli -->
+    <div id="platformPanel"></div>
+
+    <!-- Bağlantı testi -->
+    <div class="card">
+      <div class="card-ttl">Bağlantı Testi</div>
+      <div class="test-box" id="testBox">—</div>
+      <button class="btn btn-sec" onclick="baglantiTesti()">🔗 Bağlantıyı Test Et</button>
     </div>
   </div>
+</main>
 
-  <!-- Platform Tespiti -->
-  <div id="platformPanel"></div>
-
-  <!-- Bağlantı Testi -->
-  <div class="card">
-    <div class="card-ttl">Bağlantı Testi</div>
-    <div class="test-sonuc" id="testSonuc">—</div>
-    <button class="btn btn-sec" onclick="baglantiTesti()">🔗 Bağlantıyı Test Et</button>
-  </div>
-</div>
-
+<footer>Developed by Mümin KOCATEPE</footer>
 <div class="toast" id="toast"></div>
 
 <script>
-const GAS_URL='https://script.google.com/macros/s/AKfycbwixLKgFPdHTHqhA9ABe7ol2DO4e5yUb6fau0wQ0uet5fUat25lD3UDc7JsrT5A1mU6gA/exec';
-const T={
-  cesme:      {ad:'Çeşme AAT',       r:'#0ea5e9',i:'💧',id:'cesme'},
-  doganbey:   {ad:'Doğanbey AAT',    r:'#8b5cf6',i:'🌊',id:'doganbey'},
-  urla:       {ad:'Urla AAT',        r:'#22c55e',i:'🌿',id:'urla'},
-  ozdere:     {ad:'Özdere AAT',      r:'#f59e0b',i:'🏖️',id:'ozdere'},
-  seferihisar:{ad:'Seferihisar AAT', r:'#ef4444',i:'🏛️',id:'seferihisar'},
-  mordogan:   {ad:'Mordoğan AAT',    r:'#ec4899',i:'⚓',id:'mordogan'}
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwixLKgFPdHTHqhA9ABe7ol2DO4e5yUb6fau0wQ0uet5fUat25lD3UDc7JsrT5A1mU6gA/exec';
+
+const T = {
+  cesme:       { ad: 'Çeşme AAT',       r: '#0ea5e9', i: '💧' },
+  doganbey:    { ad: 'Doğanbey AAT',    r: '#8b5cf6', i: '🌊' },
+  urla:        { ad: 'Urla AAT',        r: '#22c55e', i: '🌿' },
+  ozdere:      { ad: 'Özdere AAT',      r: '#f59e0b', i: '🏖️' },
+  seferihisar: { ad: 'Seferihisar AAT', r: '#ef4444', i: '🏛️' },
+  mordogan:    { ad: 'Mordoğan AAT',    r: '#ec4899', i: '⚓'  }
 };
-let secili=null;
+
+let secili = null;
+
+// APK WebView içindeyse true
+function isApk() {
+  return typeof window.AndroidNative !== 'undefined';
+}
+
+// iPhone/iPad — iOS 13+ iPadOS da MacIntel döndürür
+function isIOS() {
+  return /iP(hone|ad|od)/.test(navigator.userAgent) ||
+         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
 
 // Tesis kartları oluştur
-(function(){
-  const g=document.getElementById('tesisGrid');
-  Object.entries(T).forEach(([id,t])=>{
-    const d=document.createElement('div');
-    d.className='kart';
-    d.style.borderColor=t.r+'55';
-    d.innerHTML=`<div class="ikon">${t.i}</div><div class="ad" style="color:${t.r}">${t.ad}</div>`;
-    d.onclick=()=>tesisSeç(id);
+(function() {
+  const g = document.getElementById('tesisGrid');
+  Object.entries(T).forEach(([id, t]) => {
+    const d = document.createElement('div');
+    d.className = 'kart';
+    d.style.borderColor = t.r + '55';
+    d.innerHTML = `<div class="ikon">${t.i}</div><div class="ad" style="color:${t.r}">${t.ad}</div>`;
+    d.onclick = () => tesisSeç(id);
     g.appendChild(d);
   });
 })();
 
-function isIOS(){
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-}
+function tesisSeç(id) {
+  secili = id;
+  const t = T[id];
 
-function tesisSeç(id){
-  secili=id;
-  const t=T[id];
-  document.getElementById('badge').innerHTML=`<span>${t.i}</span><span style="color:${t.r}">${t.ad}</span>`;
-  document.getElementById('aktifAlt').textContent=t.ad+' için 2FA SMS\'lerini sisteme iletecek';
-  document.getElementById('testSonuc').textContent='—';
-  renderPlatformPanel(id);
+  document.getElementById('badge').innerHTML =
+    `<span>${t.i}</span><span style="color:${t.r}">${t.ad}</span>`;
+
+  document.getElementById('testBox').textContent = '—';
+  document.getElementById('testBox').style.borderColor = '';
+  document.getElementById('testBox').style.color = '';
+
+  // APK modunda aktif tesis kaydet
+  if (isApk()) {
+    try { window.AndroidNative.setActiveTesis(id); } catch(e) {}
+    document.getElementById('apkBannerAlt').textContent =
+      t.ad + ' SMS\'leri arka planda otomatik iletiliyor';
+    document.getElementById('apkBanner').style.display = 'flex';
+    document.getElementById('aktifBanner').style.display = 'none';
+  } else {
+    document.getElementById('aktifBannerAlt').textContent =
+      t.ad + ' için 2FA SMS\'lerini sisteme iletecek';
+    document.getElementById('aktifBanner').style.display = 'flex';
+    document.getElementById('apkBanner').style.display = 'none';
+  }
+
+  renderPlatform(id);
+
   document.getElementById('s1').classList.remove('on');
   document.getElementById('s2').classList.add('on');
 }
 
-function geri(){
-  secili=null;
+function geri() {
+  secili = null;
   document.getElementById('s2').classList.remove('on');
   document.getElementById('s1').classList.add('on');
 }
 
-function renderPlatformPanel(id){
-  const el=document.getElementById('platformPanel');
-  if(isIOS()){
-    el.innerHTML=`
+function renderPlatform(id) {
+  const el = document.getElementById('platformPanel');
+
+  if (isApk()) {
+    // APK içi: SMS zaten native alınıyor, ekstra kurulum gerekmez
+    el.innerHTML = `
       <div class="card">
-        <span class="platform-badge platform-ios">iPhone / iPad</span>
+        <span class="plt-badge plt-apk">Android Uygulama</span>
+        <div class="card-ttl">Otomatik SMS İletimi</div>
+        <div class="adim-liste">
+          <div class="adim">
+            <div class="adim-no">✓</div>
+            <div class="adim-txt">Uygulama arka planda SMS dinliyor.<br><small>sim.csb.gov.tr'den gelen 2FA kodları otomatik olarak sisteme iletilir.</small></div>
+          </div>
+          <div class="adim">
+            <div class="adim-no">✓</div>
+            <div class="adim-txt">Ek kurulum gerekmez.<br><small>Telefonu SİM girişi sırasında açık tutun.</small></div>
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  if (isIOS()) {
+    el.innerHTML = `
+      <div class="card">
+        <span class="plt-badge plt-ios">iPhone / iPad</span>
         <div class="card-ttl">iOS Kısayol Kurulumu</div>
         <div class="adim-liste">
-          <div class="adim"><div class="adim-no">1</div><div class="adim-txt">Aşağıdaki butona basarak kısayolu indirin.<br><small>Dosya otomatik olarak iOS Kısayollar uygulamasına eklenir.</small></div></div>
-          <div class="adim"><div class="adim-no">2</div><div class="adim-txt">Kısayolu açın ve <strong>"Paylaşım"</strong> menüsünden SMS mesajını iletin.<br><small>Gelen SİM SMS'ini seçip "Paylaş → SİM SMS İlet" deyin.</small></div></div>
-          <div class="adim"><div class="adim-no">3</div><div class="adim-txt">Kısayol çalıştıktan sonra alıcılar kodu otomatik alır.<br><small>Her 2FA SMS'i için bu adımı tekrarlayın.</small></div></div>
+          <div class="adim">
+            <div class="adim-no">1</div>
+            <div class="adim-txt">Aşağıdaki butona basarak kısayolu indirin.<br><small>Dosya otomatik olarak Kısayollar uygulamasına eklenir.</small></div>
+          </div>
+          <div class="adim">
+            <div class="adim-no">2</div>
+            <div class="adim-txt">SİM'den SMS geldiğinde mesajı seçin → <b>Paylaş</b> → <b>SİM SMS İlet</b>.<br><small>Kısayol kodu GAS'a otomatik iletir.</small></div>
+          </div>
+          <div class="adim">
+            <div class="adim-no">3</div>
+            <div class="adim-txt">İşlem tamamdır. Alıcılar kodu otomatik alır.</div>
+          </div>
         </div>
-        <button class="btn btn-ios" onclick="iosKisayoluIndir('${id}')" style="margin-top:12px">📥 iOS Kısayolunu İndir</button>
+        <button class="btn btn-ios" onclick="iosKisayoluIndir('${id}')" style="margin-top:12px">
+          📥 iOS Kısayolunu İndir
+        </button>
       </div>`;
   } else {
-    el.innerHTML=`
+    el.innerHTML = `
       <div class="card">
-        <span class="platform-badge platform-android">Android</span>
+        <span class="plt-badge plt-android">Android — Tarayıcı</span>
         <div class="card-ttl">MacroDroid ile Otomatik İletim</div>
         <div class="adim-liste">
-          <div class="adim"><div class="adim-no">1</div><div class="adim-txt">MacroDroid uygulamasını açın.<br><small>Yüklü değilse Play Store'dan ücretsiz indirebilirsiniz.</small></div></div>
-          <div class="adim"><div class="adim-no">2</div><div class="adim-txt">"<strong>csb.gov.tr</strong>" konulu SMS geldiğinde GAS URL'ye POST gönderecek şekilde makro kurun.<br><small>Trigger: SMS Alındı → Action: HTTP İsteği (POST, JSON body)</small></div></div>
-          <div class="adim"><div class="adim-no">3</div><div class="adim-txt">Bir SİM SMS'i geldiğinde sistem otomatik iletir. Ekstra işlem gerekmez.</div></div>
+          <div class="adim">
+            <div class="adim-no">1</div>
+            <div class="adim-txt">MacroDroid uygulamasını yükleyin ve açın.<br><small>Play Store'dan ücretsiz indirilebilir.</small></div>
+          </div>
+          <div class="adim">
+            <div class="adim-no">2</div>
+            <div class="adim-txt"><b>Trigger:</b> SMS Alındı (gönderen: csb.gov.tr)<br><b>Action:</b> HTTP İsteği → POST → JSON body<br><small>{"action":"smsWebhook","body":"[SMS içeriği]","tesis":"${id}"}</small></div>
+          </div>
+          <div class="adim">
+            <div class="adim-no">3</div>
+            <div class="adim-txt">Makro aktif olduğunda SİM SMS'leri otomatik iletilir.</div>
+          </div>
         </div>
-        <button class="btn btn-sec" onclick="macroDroidAc()" style="margin-top:12px">📲 MacroDroid'i Aç</button>
+        <button class="btn btn-sec" onclick="macroDroidAc()" style="margin-top:12px">
+          📲 MacroDroid'i Aç
+        </button>
       </div>`;
   }
 }
 
-function macroDroidAc(){
-  const pkg='com.arlosoft.macrodroid';
-  const fallback=encodeURIComponent('https://play.google.com/store/apps/details?id='+pkg);
-  window.location.href='intent://main#Intent;package='+pkg+';S.browser_fallback_url='+fallback+';end';
+function macroDroidAc() {
+  const pkg = 'com.arlosoft.macrodroid';
+  const fb = encodeURIComponent('https://play.google.com/store/apps/details?id=' + pkg);
+  window.location.href = 'intent://main#Intent;package=' + pkg + ';S.browser_fallback_url=' + fb + ';end';
 }
 
-function iosKisayoluIndir(id){
-  const t=T[id];
-  const plist=`<?xml version="1.0" encoding="UTF-8"?>
+function iosKisayoluIndir(id) {
+  const t = T[id];
+  const plist = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
@@ -240,43 +347,47 @@ function iosKisayoluIndir(id){
   <key>WFWorkflowName</key><string>SİM SMS İlet - ${t.ad}</string>
 </dict>
 </plist>`;
-  const blob=new Blob([plist],{type:'application/octet-stream'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download='SIM-SMS-Ilet-'+id+'.shortcut';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const blob = new Blob([plist], { type: 'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'SIM-SMS-Ilet-' + id + '.shortcut';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
   toast('Kısayol indiriliyor...');
 }
 
-async function baglantiTesti(){
-  const el=document.getElementById('testSonuc');
-  el.textContent='⏳ Test ediliyor...';
-  try{
-    const res=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'ping'})});
-    const d=await res.json();
-    if(d.ok){
-      el.style.color='#22c55e';
-      el.textContent='✅ '+d.message;
+async function baglantiTesti() {
+  const box = document.getElementById('testBox');
+  box.style.color = '';
+  box.style.borderColor = '';
+  box.textContent = '⏳ Test ediliyor...';
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'ping' })
+    });
+    const d = await res.json();
+    if (d.ok) {
+      box.style.color = '#22c55e';
+      box.style.borderColor = '#22c55e33';
+      box.textContent = '✅ ' + d.message;
     } else {
-      el.style.color='#ef4444';
-      el.textContent='❌ GAS hata verdi';
+      box.style.color = '#ef4444';
+      box.textContent = '❌ GAS hata: ' + (d.error || 'bilinmeyen');
     }
-  }catch(e){
-    el.style.color='#ef4444';
-    el.textContent='❌ Bağlantı başarısız — internet kontrol edin';
+  } catch (e) {
+    box.style.color = '#ef4444';
+    box.textContent = '❌ Bağlantı kurulamadı — internet kontrol edin';
   }
 }
 
 let tt;
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.className='toast on';
-  if(tt)clearTimeout(tt);
-  tt=setTimeout(()=>el.className='toast',2500);
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast on';
+  if (tt) clearTimeout(tt);
+  tt = setTimeout(() => el.className = 'toast', 2500);
 }
 </script>
 </body>

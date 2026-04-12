@@ -3,181 +3,238 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>SİM Giriş — Alıcı Paneli</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#020c18">
+<title>Yarımada SİM Giriş Sistemi</title>
 <style>
-:root{--bg:#020c18;--surf:#041428;--brd:#1e293b;--pri:#0ea5e9;--ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--txt:#e2e8f0;--mut:#94a3b8;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
-.hdr{background:linear-gradient(135deg,#041428,#020c18);border-bottom:1px solid var(--brd);padding:16px;text-align:center;}
-.hdr-brand{font-size:11px;font-weight:800;color:var(--pri);letter-spacing:3px;margin-bottom:2px;}
-.hdr-title{font-size:15px;font-weight:700;}
-.hdr-sub{font-size:11px;color:var(--mut);margin-top:2px;}
-.scr{display:none;padding:16px;max-width:480px;margin:0 auto;}
+body{background:#020c18;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;}
+
+/* Header */
+.header{background:linear-gradient(135deg,#041428 0%,#062040 100%);border-bottom:2px solid #0ea5e9;padding:24px 20px 20px;text-align:center;}
+.header-logo{font-size:13px;font-weight:700;color:#0ea5e9;letter-spacing:2px;margin-bottom:8px;}
+.header-title{font-size:20px;font-weight:800;color:#fff;line-height:1.3;}
+.header-sub{font-size:12px;color:#64748b;margin-top:6px;}
+
+/* Container */
+.container{flex:1;padding:24px 16px;max-width:480px;margin:0 auto;width:100%;}
+.section-title{font-size:12px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;}
+
+/* Tesis kartları (ana menü ile aynı stil) */
+.tesis-listesi{display:flex;flex-direction:column;gap:10px;}
+.tesis-kart{display:flex;align-items:center;background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:14px 16px;text-decoration:none;cursor:pointer;transition:border-color .2s,background .2s,transform .15s;}
+.tesis-kart:hover{border-color:#0ea5e9;background:#061c30;}
+.tesis-kart:active{transform:scale(.98);}
+.tesis-ikon{width:44px;height:44px;background:#0c1f33;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.tesis-bilgi{flex:1;margin:0 12px;}
+.tesis-ad{font-size:15px;font-weight:700;color:#fff;margin-bottom:3px;}
+.tesis-tam-ad{font-size:12px;color:#64748b;}
+.tesis-ok{font-size:20px;color:#334155;}
+.tesis-kart:hover .tesis-ok{color:#0ea5e9;}
+
+/* Giriş ekranı */
+.scr{display:none;}
 .scr.on{display:block;}
-.scr-ttl{font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.kart{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:18px 12px;cursor:pointer;text-align:center;transition:transform .12s;}
-.kart:active{transform:scale(.96);}
-.kart .ikon{font-size:26px;margin-bottom:8px;}
-.kart .ad{font-size:13px;font-weight:700;}
-.back{background:none;border:none;color:var(--mut);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;margin-bottom:14px;padding:4px 0;}
-.badge{display:inline-flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--brd);border-radius:20px;padding:7px 16px;margin-bottom:16px;font-size:13px;font-weight:700;}
-.card{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:14px;margin-bottom:12px;}
-.card-ttl{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
-.crow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--brd);cursor:pointer;}
-.crow:last-child{border-bottom:none;}
-.clbl{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;}
-.cval{font-size:14px;font-weight:700;font-family:monospace;}
+.back-btn{background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;margin-bottom:16px;padding:4px 0;}
+.tesis-badge{display:flex;align-items:center;gap:10px;background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:12px 14px;margin-bottom:16px;}
+.tesis-badge .b-ikon{font-size:22px;}
+.tesis-badge .b-ad{font-size:14px;font-weight:700;}
+
+/* Kimlik bilgileri kartı */
+.card{background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:14px;margin-bottom:12px;}
+.card-ttl{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.cred-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #1e3a5f;cursor:pointer;}
+.cred-row:last-child{border-bottom:none;}
+.cred-lbl{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.cred-val{font-size:14px;font-weight:700;font-family:monospace;color:#e2e8f0;}
+
+/* Butonlar */
 .btn{width:100%;padding:14px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;transition:opacity .15s;}
 .btn:active{opacity:.85;}
 .btn-pri{background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;}
-.btn-sec{background:var(--surf);border:1px solid var(--brd);color:var(--txt);}
-.kod-panel{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:16px;margin-bottom:12px;}
-.kod-hdr{font-size:13px;font-weight:700;color:var(--mut);text-align:center;margin-bottom:12px;}
-.kod-box{background:#020c18;border:2px solid var(--brd);border-radius:10px;padding:22px;text-align:center;margin-bottom:10px;transition:border-color .3s;}
-.kod-num{font-size:34px;font-weight:800;letter-spacing:8px;font-family:monospace;transition:color .3s;}
-.kod-yas{font-size:11px;color:var(--mut);margin-top:8px;}
+.btn-sec{background:#041428;border:1px solid #1e3a5f;color:#e2e8f0;}
+
+/* 2FA kod paneli */
+.kod-panel{background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:16px;margin-bottom:12px;}
+.kod-hdr{font-size:13px;font-weight:700;color:#64748b;text-align:center;margin-bottom:12px;}
+.kod-box{background:#020c18;border:2px solid #1e3a5f;border-radius:10px;padding:22px;text-align:center;margin-bottom:10px;transition:border-color .3s;}
+.kod-num{font-size:34px;font-weight:800;letter-spacing:8px;font-family:monospace;transition:color .3s;color:#e2e8f0;}
+.kod-yas{font-size:11px;color:#64748b;margin-top:8px;}
+.bos{color:#64748b;text-align:center;padding:22px;font-size:13px;line-height:1.7;}
 .yesil .kod-box{border-color:#22c55e;} .yesil .kod-num{color:#22c55e;}
 .sari  .kod-box{border-color:#f59e0b;} .sari  .kod-num{color:#f59e0b;}
 .krmz  .kod-box{border-color:#ef4444;} .krmz  .kod-num{color:#ef4444;}
-.bos{color:var(--mut);text-align:center;padding:22px;font-size:13px;line-height:1.7;}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:#e2e8f0;padding:10px 22px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
+.son-gun{font-size:11px;color:#64748b;text-align:center;margin-top:6px;}
+
+/* Footer */
+footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-top:1px solid #1e3a5f;}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#e2e8f0;padding:10px 22px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
 .toast.on{opacity:1;}
 </style>
 </head>
 <body>
 
-<div class="hdr">
-  <div class="hdr-brand">YARIMADA SİM</div>
-  <div class="hdr-title">Alıcı Girişi</div>
-  <div class="hdr-sub">2FA Kod Yönetimi</div>
+<div class="header">
+  <div class="header-logo">İZSU YARIMADA TESİSLER</div>
+  <div class="header-title">Yarımada SİM Giriş Sistemi</div>
+  <div class="header-sub">Tesis seçerek 2FA kodunu alın</div>
 </div>
 
-<div class="scr on" id="s1">
-  <div class="scr-ttl">Tesisini Seç</div>
-  <div class="grid" id="tesisGrid"></div>
+<!-- Ekran 1: Tesis seç -->
+<div class="container scr on" id="s1">
+  <div class="section-title">Tesis Seç</div>
+  <div class="tesis-listesi" id="tesisListesi"></div>
 </div>
 
-<div class="scr" id="s2">
-  <button class="back" onclick="geri()">← Geri</button>
-  <div class="badge" id="badge"></div>
+<!-- Ekran 2: Giriş ve kod -->
+<div class="container scr" id="s2">
+  <button class="back-btn" onclick="geri()">← Geri</button>
+  <div class="tesis-badge" id="tesisBadge"></div>
 
   <div class="card">
     <div class="card-ttl">Giriş Bilgileri</div>
-    <div class="crow" onclick="kopyala('user')">
-      <div><div class="clbl">Kullanıcı Adı</div><div class="cval" id="cUser">—</div></div>
-      <span>📋</span>
+    <div class="cred-row" onclick="kopyala('user')">
+      <div><div class="cred-lbl">Kullanıcı Adı</div><div class="cred-val" id="cUser">—</div></div>
+      <span style="color:#64748b">📋</span>
     </div>
-    <div class="crow" onclick="kopyala('sifre')">
-      <div><div class="clbl">Şifre</div><div class="cval" id="cSifre">—</div></div>
-      <span>📋</span>
+    <div class="cred-row" onclick="kopyala('sifre')">
+      <div><div class="cred-lbl">Şifre</div><div class="cred-val" id="cSifre">—</div></div>
+      <span style="color:#64748b">📋</span>
     </div>
   </div>
 
-  <button class="btn btn-pri" onclick="simGiris()">🔐 SİM GİRİŞ YAP</button>
+  <button class="btn btn-pri" onclick="simGiris()">🔐 SİM'e Giriş Yap</button>
 
   <div class="kod-panel" id="kodPanel" style="display:none">
     <div class="kod-hdr">📬 2FA Kodu</div>
     <div id="kodIcerik" class="bos">⏳ Kod bekleniyor...</div>
-    <button class="btn btn-sec" onclick="kodGetir()" style="margin-top:4px">🔄 Kodu Yenile</button>
-    <div id="sonGun" style="font-size:11px;color:var(--mut);text-align:center;margin-top:6px"></div>
+    <button class="btn btn-sec" onclick="kodGetir()" style="margin-top:4px">🔄 Yenile</button>
+    <div class="son-gun" id="sonGun"></div>
   </div>
 </div>
 
+<footer>Developed by Mümin KOCATEPE</footer>
 <div class="toast" id="toast"></div>
 
 <script>
-const GAS_URL='https://script.google.com/macros/s/AKfycbwixLKgFPdHTHqhA9ABe7ol2DO4e5yUb6fau0wQ0uet5fUat25lD3UDc7JsrT5A1mU6gA/exec';
-const T={
-  cesme:      {ad:'Çeşme AAT',      k:'izmir_izsu_cesme', s:'izsu_1135',        r:'#0ea5e9',i:'💧'},
-  doganbey:   {ad:'Doğanbey AAT',   k:'t.dululoglu',      s:'urla_izsu',        r:'#8b5cf6',i:'🌊'},
-  urla:       {ad:'Urla AAT',       k:'k.dinler',         s:'urla_izsu',        r:'#22c55e',i:'🌿'},
-  ozdere:     {ad:'Özdere AAT',     k:'merve.barin',      s:'izsu_ozdere',      r:'#f59e0b',i:'🏖️'},
-  seferihisar:{ad:'Seferihisar AAT',k:'gamze.tokdemir',   s:'izsu_seferihisar', r:'#ef4444',i:'🏛️'},
-  mordogan:   {ad:'Mordoğan AAT',   k:'efurkan.100',      s:'5414211516',       r:'#ec4899',i:'⚓'}
-};
-let secili=null,poll=null;
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwixLKgFPdHTHqhA9ABe7ol2DO4e5yUb6fau0wQ0uet5fUat25lD3UDc7JsrT5A1mU6gA/exec';
 
-(function(){
-  const g=document.getElementById('tesisGrid');
-  Object.entries(T).forEach(([id,t])=>{
-    const d=document.createElement('div');
-    d.className='kart';
-    d.style.borderColor=t.r+'55';
-    d.innerHTML=`<div class="ikon">${t.i}</div><div class="ad" style="color:${t.r}">${t.ad}</div>`;
-    d.onclick=()=>tesisSeç(id);
-    g.appendChild(d);
+const T = {
+  cesme:       { ad: 'Çeşme AAT',       tam: 'Çeşme Atıksu Arıtma Tesisi',       k: 'izmir_izsu_cesme',  s: 'izsu_1135',        r: '#0ea5e9', i: '🌊' },
+  doganbey:    { ad: 'Doğanbey AAT',    tam: 'Doğanbey Atıksu Arıtma Tesisi',    k: 't.dululoglu',      s: 'urla_izsu',        r: '#8b5cf6', i: '🌿' },
+  urla:        { ad: 'Urla AAT',        tam: 'Urla Atıksu Arıtma Tesisi',        k: 'k.dinler',         s: 'urla_izsu',        r: '#22c55e', i: '🏔️' },
+  ozdere:      { ad: 'Özdere AAT',      tam: 'Özdere Atıksu Arıtma Tesisi',      k: 'merve.barin',      s: 'izsu_ozdere',      r: '#f59e0b', i: '⛵' },
+  seferihisar: { ad: 'Seferihisar AAT', tam: 'Seferihisar Atıksu Arıtma Tesisi', k: 'gamze.tokdemir',   s: 'izsu_seferihisar', r: '#ef4444', i: '🍊' },
+  mordogan:    { ad: 'Mordoğan AAT',    tam: 'Mordoğan Atıksu Arıtma Tesisi',    k: 'efurkan.100',      s: '5414211516',       r: '#ec4899', i: '⚓'  }
+};
+
+let secili = null;
+let poll = null;
+
+// Tesis listesini oluştur (index.html ile aynı stil)
+(function() {
+  const liste = document.getElementById('tesisListesi');
+  Object.entries(T).forEach(([id, t]) => {
+    const a = document.createElement('div');
+    a.className = 'tesis-kart';
+    a.innerHTML = `
+      <div class="tesis-ikon">${t.i}</div>
+      <div class="tesis-bilgi">
+        <div class="tesis-ad">${t.ad}</div>
+        <div class="tesis-tam-ad">${t.tam}</div>
+      </div>
+      <div class="tesis-ok">›</div>`;
+    a.onclick = () => tesisSeç(id);
+    liste.appendChild(a);
   });
 })();
 
-function tesisSeç(id){
-  secili=id;
-  const t=T[id];
-  document.getElementById('badge').innerHTML=`<span>${t.i}</span><span style="color:${t.r}">${t.ad}</span>`;
-  document.getElementById('cUser').textContent=t.k;
-  document.getElementById('cSifre').textContent=t.s;
-  document.getElementById('kodPanel').style.display='none';
-  document.getElementById('kodIcerik').className='bos';
-  document.getElementById('kodIcerik').innerHTML='⏳ Kod bekleniyor...';
+function tesisSeç(id) {
+  secili = id;
+  const t = T[id];
+
+  document.getElementById('tesisBadge').innerHTML =
+    `<span class="b-ikon">${t.i}</span><span class="b-ad" style="color:${t.r}">${t.ad}</span>`;
+  document.getElementById('cUser').textContent = t.k;
+  document.getElementById('cSifre').textContent = t.s;
+  document.getElementById('kodPanel').style.display = 'none';
+  document.getElementById('kodIcerik').className = 'bos';
+  document.getElementById('kodIcerik').innerHTML = '⏳ Kod bekleniyor...';
+  document.getElementById('sonGun').textContent = '';
   stopPoll();
+
   document.getElementById('s1').classList.remove('on');
   document.getElementById('s2').classList.add('on');
 }
 
-function geri(){
-  stopPoll();secili=null;
+function geri() {
+  stopPoll();
+  secili = null;
   document.getElementById('s2').classList.remove('on');
   document.getElementById('s1').classList.add('on');
 }
 
-async function simGiris(){
-  if(!secili)return;
-  try{await navigator.clipboard.writeText(T[secili].s);}catch(e){}
-  window.open('https://sim.csb.gov.tr','_blank');
-  document.getElementById('kodPanel').style.display='block';
+async function simGiris() {
+  if (!secili) return;
+  try { await navigator.clipboard.writeText(T[secili].s); } catch(e) {}
+  window.open('https://sim.csb.gov.tr', '_blank');
+  document.getElementById('kodPanel').style.display = 'block';
   toast('Şifre kopyalandı — SİM açılıyor');
   await kodGetir();
-  poll=setInterval(kodGetir,15000);
+  poll = setInterval(kodGetir, 15000);
 }
 
-async function kodGetir(){
-  if(!secili)return;
-  const el=document.getElementById('kodIcerik');
-  try{
-    const res=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'getCode',tesis:secili})});
-    const d=await res.json();
-    document.getElementById('sonGun').textContent='Son güncelleme: '+new Date().toLocaleTimeString('tr-TR');
-    if(d.ok){
-      const dk=Math.floor(d.ageSec/60),sn=d.ageSec%60;
-      const cls=d.ageSec<120?'yesil':d.ageSec<240?'sari':'krmz';
-      const m=d.body.match(/\d{4,8}/);
-      const kod=m?m[0]:d.body;
-      el.className=cls;
-      el.innerHTML=`<div class="kod-box"><div class="kod-num">${kod}</div><div class="kod-yas">${dk>0?dk+' dk ':' '}${sn} sn önce geldi</div></div>`;
-    }else if(d.expired){
-      el.className='';el.innerHTML='<div class="bos">🔴 Kodun süresi doldu — yeniden giriş yapın</div>';
-    }else{
-      el.className='';el.innerHTML='<div class="bos">⏳ Henüz kod gelmedi<br><small>SAİS sorumlusunun telefonu aktif mi?</small></div>';
+async function kodGetir() {
+  if (!secili) return;
+  const el = document.getElementById('kodIcerik');
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'getCode', tesis: secili })
+    });
+    const d = await res.json();
+    document.getElementById('sonGun').textContent = 'Son güncelleme: ' + new Date().toLocaleTimeString('tr-TR');
+    if (d.ok) {
+      const dk = Math.floor(d.ageSec / 60), sn = d.ageSec % 60;
+      const cls = d.ageSec < 120 ? 'yesil' : d.ageSec < 240 ? 'sari' : 'krmz';
+      const m = d.body.match(/\d{4,8}/);
+      const kod = m ? m[0] : d.body;
+      el.className = cls;
+      el.innerHTML = `<div class="kod-box"><div class="kod-num">${kod}</div><div class="kod-yas">${dk > 0 ? dk + ' dk ' : ''}${sn} sn önce geldi</div></div>`;
+    } else if (d.expired) {
+      el.className = '';
+      el.innerHTML = '<div class="bos">🔴 Kodun süresi doldu — yeniden giriş yapın</div>';
+    } else {
+      el.className = '';
+      el.innerHTML = '<div class="bos">⏳ Henüz kod gelmedi<br><small>SAİS sorumlusunun telefonu aktif mi?</small></div>';
     }
-  }catch(e){el.className='';el.innerHTML='<div class="bos">❌ GAS bağlantı hatası</div>';}
+  } catch(e) {
+    el.className = '';
+    el.innerHTML = '<div class="bos">❌ GAS bağlantı hatası</div>';
+  }
 }
 
-function stopPoll(){if(poll){clearInterval(poll);poll=null;}}
+function stopPoll() { if (poll) { clearInterval(poll); poll = null; } }
 
-function kopyala(tip){
-  if(!secili)return;
-  const v=tip==='user'?T[secili].k:T[secili].s;
-  const lbl=tip==='user'?'Kullanıcı adı':'Şifre';
-  try{navigator.clipboard.writeText(v).then(()=>toast(lbl+' kopyalandı'));}
-  catch(e){toast('Kopyalanamadı');}
+function kopyala(tip) {
+  if (!secili) return;
+  const v = tip === 'user' ? T[secili].k : T[secili].s;
+  const lbl = tip === 'user' ? 'Kullanıcı adı' : 'Şifre';
+  try {
+    navigator.clipboard.writeText(v).then(() => toast(lbl + ' kopyalandı'));
+  } catch(e) { toast('Kopyalanamadı'); }
 }
 
 let tt;
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.className='toast on';
-  if(tt)clearTimeout(tt);
-  tt=setTimeout(()=>el.className='toast',2500);
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast on';
+  if (tt) clearTimeout(tt);
+  tt = setTimeout(() => el.className = 'toast', 2500);
 }
 </script>
 </body>
