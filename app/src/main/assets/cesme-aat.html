@@ -496,7 +496,7 @@
         { isim: 'Coşkun AKAY', telefon: '05549434047' }
       ]
     };
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbzJkSZCvfIoZ9GE-fJNDEGeuWL4mT64Ho4FsSpt-jNZW1YGcWGbwSVAluLz3izbCm-HiA/exec';
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwixLKgFPdHTHqhA9ABe7ol2DO4e5yUb6fau0wQ0uet5fUat25lD3UDc7JsrT5A1mU6gA/exec';
     if (window.AndroidNative) AndroidNative.setActiveTesis(TESİS.id);
 
     // APK modunda SMS kurulum ekranını sadeleştir
@@ -598,7 +598,7 @@
     async function simGiris() {
       if (seciliAlici === null) { toast('Lütfen önce bir alıcı seçin', 'err'); return; }
       const alici = TESİS.alicilar[seciliAlici];
-      if (GAS_URL !== 'https://script.google.com/macros/s/AKfycbzJkSZCvfIoZ9GE-fJNDEGeuWL4mT64Ho4FsSpt-jNZW1YGcWGbwSVAluLz3izbCm-HiA/exec') {
+      if (GAS_URL !== '__GAS_URL_HENUZ_AYARLANMADI__') {
         fetch(GAS_URL, {
           method: 'POST', headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({ action: 'setRecipient', tesis: TESİS.id, telefon: alici.telefon, isim: alici.isim })
