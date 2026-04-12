@@ -323,6 +323,13 @@
 
       <!-- ANDROID paneli -->
       <div id="panelAndroid">
+        <!-- APK modunda SMS zaten aktif -->
+        <div id="apkSmsAktif" style="display:none;background:#0f2818;border:1px solid #22c55e;border-radius:10px;padding:16px;margin-bottom:14px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">&#x2705;</div>
+          <div style="font-size:15px;font-weight:700;color:#22c55e;margin-bottom:6px;">SMS İletimi Aktif</div>
+          <div style="font-size:12px;color:#86efac;line-height:1.7;">Uygulama arka planda SMS'leri otomatik olarak GAS'a iletiyor.<br>MacroDroid veya başka bir uygulamaya gerek yok.</div>
+        </div>
+        <div id="macroDroidAdimlar">
         <div class="sms-adim">
           <div class="sms-adim-no">ADIM 1 / 3</div>
           <p>MacroDroid yüklüyse açılır, yüklü değilse Play Store'a yönlendirilir.</p>
@@ -347,6 +354,7 @@
           </div>
         </div>
         <div class="sms-adim">
+          </div><!-- /macroDroidAdimlar -->
           <div class="sms-adim-no">ADIM 3 / 3</div>
           <p>Backend bağlantısını test edin.</p>
           <button class="sms-btn sms-btn-test" onclick="smsBaglantiTest()">🔗 Bağlantı Testi</button>
@@ -360,6 +368,8 @@
         <!-- iOS Kısayollar - SMS Otomatik İletim -->
         <div style="background:#0f2818;border:1px solid #22c55e;border-radius:10px;padding:12px;margin-bottom:14px;">
           <div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:6px;">⚡ Otomatik İletim — iOS Kısayollar</div>
+          <button onclick="iosKisayoluIndir()" style="width:100%;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:10px;padding:13px 16px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;">&#x1F4E5; iOS KISA YOLUNU İNDİR (1 TIK)</button>
+          <p style="font-size:11px;color:#4ade80;margin:-2px 0 10px 0;text-align:center;">İndirilen dosyayı aç → Kısayollar uygulaması açılır → Ekle</p>
           <p style="font-size:12px;color:#86efac;margin-bottom:10px;">
             Telefona SİM SMS'i gelince <strong>otomatik olarak</strong> GAS'a iletilir. Kısayollar uygulaması iOS'ta zaten yüklü gelir.
           </p>
@@ -646,6 +656,86 @@
         window.location.href = 'https://play.google.com/store/apps/details?id=' + pkg;
       }, 1200);
     }
+        function iosKisayoluIndir() {
+      const plist = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>WFWorkflowClientVersion</key><string>1300.0.1</string>
+  <key>WFWorkflowHasShortcutInputVariables</key><true/>
+  <key>WFWorkflowIcon</key>
+  <dict>
+    <key>WFWorkflowIconStartColor</key><integer>-2071028991</integer>
+    <key>WFWorkflowIconGlyphNumber</key><integer>59783</integer>
+  </dict>
+  <key>WFWorkflowInputContentItemClasses</key>
+  <array><string>WFStringContentItem</string></array>
+  <key>WFWorkflowActions</key>
+  <array>
+    <dict>
+      <key>WFWorkflowActionIdentifier</key>
+      <string>is.workflow.actions.downloadurl</string>
+      <key>WFWorkflowActionParameters</key>
+      <dict>
+        <key>WFHTTPMethod</key><string>POST</string>
+        <key>WFURL</key><string>${GAS_URL}</string>
+        <key>WFHTTPBodyType</key><string>JSON</string>
+        <key>WFJSONValues</key>
+        <dict>
+          <key>Value</key>
+          <dict>
+            <key>WFDictionaryFieldValueItems</key>
+            <array>
+              <dict>
+                <key>WFItemType</key><integer>0</integer>
+                <key>WFKey</key><dict><key>Value</key><dict><key>string</key><string>action</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
+                <key>WFValue</key><dict><key>Value</key><dict><key>string</key><string>smsWebhook</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
+              </dict>
+              <dict>
+                <key>WFItemType</key><integer>0</integer>
+                <key>WFKey</key><dict><key>Value</key><dict><key>string</key><string>body</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
+                <key>WFValue</key>
+                <dict>
+                  <key>Value</key>
+                  <dict>
+                    <key>attachmentsByRange</key>
+                    <dict><key>{0, 1}</key><dict><key>Type</key><string>ExtensionInput</string></dict></dict>
+                    <key>string</key><string>￼</string>
+                  </dict>
+                  <key>WFSerializationType</key><string>WFTextTokenString</string>
+                </dict>
+              </dict>
+              <dict>
+                <key>WFItemType</key><integer>0</integer>
+                <key>WFKey</key><dict><key>Value</key><dict><key>string</key><string>tesis</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
+                <key>WFValue</key><dict><key>Value</key><dict><key>string</key><string>${TESİŞ.id}</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
+              </dict>
+            </array>
+          </dict>
+          <key>WFSerializationType</key><string>WFDictionaryFieldValue</string>
+        </dict>
+      </dict>
+    </dict>
+  </array>
+  <key>WFWorkflowMinimumClientVersion</key><integer>900</integer>
+  <key>WFWorkflowMinimumClientVersionString</key><string>900</string>
+  <key>WFWorkflowOutputContentItemClasses</key><array/>
+  <key>WFWorkflowImportQuestions</key><array/>
+  <key>WFWorkflowName</key><string>SİM SMS İlet - ${TESİŞ.ad}</string>
+</dict>
+</plist>`;
+      const blob = new Blob([plist], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sim-sms-ilet-' + TESİŞ.id + '.shortcut';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast('Kısayol dosyası indirildi — Dosyayı aç → Kısayollar uygulamasına ekle', 'ok');
+    }
+
     function ntfyKanalKopyala() {
       kopyala(TESİS.ntfyKanal, 'Kanal adı');
     }
