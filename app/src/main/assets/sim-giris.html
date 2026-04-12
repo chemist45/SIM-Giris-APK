@@ -8,21 +8,20 @@
 <meta name="theme-color" content="#020c18">
 <title>Yarımada SİM Giriş Sistemi</title>
 <style>
-/* ── Reset ── */
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#020c18;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;display:flex;flex-direction:column;}
 
-/* ── Header ── */
+/* Header */
 .header{background:linear-gradient(135deg,#041428 0%,#062040 100%);border-bottom:2px solid #0ea5e9;padding:22px 20px 18px;text-align:center;flex-shrink:0;}
 .header-logo{font-size:13px;font-weight:700;color:#0ea5e9;letter-spacing:2px;margin-bottom:8px;}
 .header-title{font-size:21px;font-weight:800;color:#fff;line-height:1.3;}
 .header-sub{font-size:12px;color:#64748b;margin-top:5px;}
 
-/* ── Container ── */
+/* Sayfalar */
 .page{flex:1;padding:20px 16px;max-width:480px;margin:0 auto;width:100%;display:none;}
 .page.on{display:block;}
 
-/* ── Ana menü tesis listesi ── */
+/* Tesis kartları */
 .sec-ttl{font-size:11px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;}
 .tesis-liste{display:flex;flex-direction:column;gap:10px;}
 .tesis-kart{display:flex;align-items:center;background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .2s,background .2s,transform .12s;user-select:none;}
@@ -35,38 +34,43 @@ body{background:#020c18;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
 .t-ok{font-size:20px;color:#334155;transition:color .2s;}
 .tesis-kart:hover .t-ok{color:#0ea5e9;}
 
-/* ── Geri butonu ── */
+/* Admin butonu (ana menüde) */
+.admin-kart{display:flex;align-items:center;background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:14px 16px;cursor:pointer;margin-top:20px;transition:border-color .2s,background .2s;}
+.admin-kart:hover{border-color:#f59e0b;background:#1c1200;}
+.admin-kart:active{opacity:.85;}
+
+/* Geri butonu */
 .back{background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;padding:4px 0;margin-bottom:16px;}
 .back:hover{color:#94a3b8;}
 
-/* ── Tesis badge (detay sayfası) ── */
+/* Tesis badge */
 .t-badge{display:flex;align-items:center;gap:10px;background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:12px 14px;margin-bottom:18px;}
 .t-badge-ikon{font-size:22px;}
 .t-badge-ad{font-size:14px;font-weight:700;}
 
-/* ── Kart ── */
+/* Kart */
 .card{background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:14px;margin-bottom:12px;}
 .card-ttl{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
 
-/* ── Kimlik satırı ── */
+/* Kimlik satırı */
 .cred-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1e3a5f;cursor:pointer;}
 .cred-row:last-child{border-bottom:none;}
 .cred-row:active{opacity:.75;}
 .cred-lbl{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
 .cred-val{font-size:14px;font-weight:700;font-family:monospace;color:#e2e8f0;}
-.copy-ico{font-size:16px;color:#334155;flex-shrink:0;}
 
-/* ── Butonlar ── */
-.btn{width:100%;padding:15px;border-radius:11px;border:none;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:opacity .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;}
+/* Butonlar */
+.btn{width:100%;padding:15px;border-radius:11px;border:none;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:opacity .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;}
 .btn:active{opacity:.85;transform:scale(.99);}
 .btn-sim{background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;font-size:16px;}
 .btn-sec{background:#041428;border:1px solid #1e3a5f;color:#e2e8f0;}
 .btn-apk{background:linear-gradient(135deg,#14532d,#166534);border:1px solid #22c55e55;color:#fff;}
 .btn-ios{background:linear-gradient(135deg,#1c1c1e,#2c2c2e);border:1px solid #3c3c3e;color:#fff;}
+.btn-warn{background:linear-gradient(135deg,#78350f,#92400e);border:1px solid #f59e0b55;color:#fff;}
 
-/* ── 2FA Kod paneli ── */
+/* 2FA Kod */
 .kod-panel{background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:16px;margin-bottom:12px;}
-.kod-hdr{font-size:12px;font-weight:700;color:#64748b;text-align:center;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;}
+.kod-hdr{font-size:11px;font-weight:700;color:#64748b;text-align:center;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;}
 .kod-box{background:#020c18;border:2px solid #1e3a5f;border-radius:10px;padding:24px 16px;text-align:center;margin-bottom:10px;transition:border-color .4s;}
 .kod-num{font-size:36px;font-weight:800;letter-spacing:10px;font-family:monospace;transition:color .4s;color:#e2e8f0;}
 .kod-yas{font-size:11px;color:#64748b;margin-top:8px;}
@@ -76,7 +80,7 @@ body{background:#020c18;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
 .krmz  .kod-box{border-color:#ef444455;} .krmz  .kod-num{color:#ef4444;}
 .son-gun{font-size:11px;color:#64748b;text-align:center;margin-top:6px;}
 
-/* ── SAİS Kurulum accordion ── */
+/* SAİS Accordion */
 .sais-toggle{width:100%;background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;transition:border-color .2s;}
 .sais-toggle:hover{border-color:#334155;}
 .sais-toggle.acik{border-color:#0ea5e9;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom:none;}
@@ -94,8 +98,9 @@ body{background:#020c18;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
 .plt-android{background:#0c2c1e;color:#4ade80;border:1px solid #14532d;}
 .plt-apk{background:#04213a;color:#38bdf8;border:1px solid #0c3a5a;}
 
-/* Banner (APK otomatik) */
-.banner-apk{background:linear-gradient(135deg,#04213a,#062a50);border:1px solid #0ea5e9;border-radius:10px;padding:13px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+/* Banner */
+.banner{border-radius:10px;padding:13px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.banner-apk{background:linear-gradient(135deg,#04213a,#062a50);border:1px solid #0ea5e9;}
 .b-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .b-dot-apk{background:#0ea5e9;box-shadow:0 0 7px #0ea5e9;}
 .b-txt{font-size:13px;font-weight:700;color:#38bdf8;line-height:1.5;}
@@ -113,6 +118,26 @@ body{background:#020c18;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
 .bilgi-kutu{background:#041428;border:1px solid #1e3a5f;border-radius:12px;padding:14px 16px;margin-top:20px;font-size:12px;color:#64748b;line-height:1.6;}
 .bilgi-kutu strong{color:#94a3b8;}
 
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;display:none;}
+.modal-overlay.acik{display:flex;}
+.modal-box{background:#041428;border:1px solid #1e3a5f;border-radius:16px;padding:24px;width:100%;max-width:360px;}
+.modal-ttl{font-size:16px;font-weight:800;margin-bottom:20px;text-align:center;}
+.modal-input{width:100%;background:#020c18;border:1px solid #1e3a5f;border-radius:10px;padding:13px 14px;font-size:14px;color:#e2e8f0;margin-bottom:10px;outline:none;}
+.modal-input:focus{border-color:#0ea5e9;}
+.modal-hata{font-size:12px;color:#ef4444;text-align:center;min-height:18px;margin-bottom:10px;}
+.modal-row{display:flex;gap:8px;}
+.btn-modal-iptl{flex:1;background:none;border:1px solid #1e3a5f;color:#64748b;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;}
+.btn-modal-giris{flex:2;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;}
+
+/* Admin tesis listesi (modal içi) */
+.admin-tesis-liste{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.admin-tesis-link{display:flex;align-items:center;gap:10px;background:#020c18;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px;cursor:pointer;text-decoration:none;transition:border-color .2s;}
+.admin-tesis-link:hover{border-color:#0ea5e9;}
+.admin-tesis-link .at-ikon{font-size:20px;width:32px;text-align:center;}
+.admin-tesis-link .at-ad{font-size:14px;font-weight:700;color:#e2e8f0;}
+.admin-tesis-link .at-ok{margin-left:auto;color:#334155;font-size:18px;}
+
 /* Footer */
 footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-top:1px solid #1e3a5f;margin-top:auto;}
 
@@ -123,21 +148,27 @@ footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-t
 </head>
 <body>
 
-<!-- ══════════════════════════════════
-     HEADER (her sayfada görünür)
-══════════════════════════════════ -->
+<!-- Header -->
 <div class="header">
   <div class="header-logo">İZSU YARIMADA TESİSLER</div>
   <div class="header-title">Yarımada SİM Giriş Sistemi</div>
   <div class="header-sub" id="headerSub">Tesisinizi seçerek giriş yapın</div>
 </div>
 
-<!-- ══════════════════════════════════
-     SAYFA 1 — Ana Menü
-══════════════════════════════════ -->
+<!-- ══ SAYFA 1 — Ana Menü ══ -->
 <div class="page on" id="p1">
   <div class="sec-ttl">Tesisler</div>
   <div class="tesis-liste" id="tesisList"></div>
+
+  <!-- Admin Paneli butonu -->
+  <div class="admin-kart" onclick="adminLoginGoster()">
+    <div class="t-ikon" style="background:#1c1200;">⚙️</div>
+    <div class="t-bilgi">
+      <div class="t-ad" style="color:#f59e0b;">Admin Paneli</div>
+      <div class="t-tam">Tesis ayarları ve alıcı yönetimi</div>
+    </div>
+    <div class="t-ok" style="color:#78350f;">›</div>
+  </div>
 
   <div class="bilgi-kutu">
     <strong>Alıcılar:</strong> Tesisinizi seçin → SİM'e giriş yapın → 2FA kodunu buradan okuyun.<br><br>
@@ -145,14 +176,12 @@ footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-t
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     SAYFA 2 — Tesis Detay
-══════════════════════════════════ -->
+<!-- ══ SAYFA 2 — Tesis Detay ══ -->
 <div class="page" id="p2">
   <button class="back" onclick="sayfaGeri()">← Geri</button>
   <div class="t-badge" id="tBadge"></div>
 
-  <!-- ── Giriş Bilgileri ── -->
+  <!-- Giriş Bilgileri -->
   <div class="card">
     <div class="card-ttl">Giriş Bilgileri</div>
     <div class="cred-row" onclick="kopyala('kullanici')">
@@ -160,21 +189,21 @@ footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-t
         <div class="cred-lbl">Kullanıcı Adı</div>
         <div class="cred-val" id="credKullanici">—</div>
       </div>
-      <span class="copy-ico">📋</span>
+      <span style="color:#334155">📋</span>
     </div>
     <div class="cred-row" onclick="kopyala('sifre')">
       <div>
         <div class="cred-lbl">Şifre</div>
         <div class="cred-val" id="credSifre">—</div>
       </div>
-      <span class="copy-ico">📋</span>
+      <span style="color:#334155">📋</span>
     </div>
   </div>
 
-  <!-- ── SİM Giriş Butonu ── -->
+  <!-- SİM Giriş -->
   <button class="btn btn-sim" onclick="simGiris()">🔐 SİM'e Giriş Yap</button>
 
-  <!-- ── 2FA Kod Paneli ── -->
+  <!-- 2FA Kod Paneli -->
   <div class="kod-panel" id="kodPanel" style="display:none">
     <div class="kod-hdr">📬 2FA Kodu</div>
     <div id="kodIcerik" class="kod-bos">⏳ Kod bekleniyor...</div>
@@ -182,7 +211,7 @@ footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-t
     <div class="son-gun" id="sonGun"></div>
   </div>
 
-  <!-- ── SAİS Kurulum Accordion ── -->
+  <!-- SAİS Accordion -->
   <button class="sais-toggle" id="saisToggle" onclick="saisAcKapat()">
     <div class="sais-toggle-sol">
       <span class="sais-toggle-ikon">📱</span>
@@ -195,36 +224,83 @@ footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-t
   </div>
 </div>
 
+<!-- ══ MODAL — Admin Login ══ -->
+<div class="modal-overlay" id="adminLoginModal">
+  <div class="modal-box">
+    <div class="modal-ttl">⚙️ Admin Girişi</div>
+    <input class="modal-input" id="adminUser" type="text" placeholder="Kullanıcı adı" autocomplete="off">
+    <input class="modal-input" id="adminPass" type="password" placeholder="Şifre"
+           onkeydown="if(event.key==='Enter') adminGiris()">
+    <div class="modal-hata" id="adminHata"></div>
+    <div class="modal-row">
+      <button class="btn-modal-iptl" onclick="adminLoginKapat()">İptal</button>
+      <button class="btn-modal-giris" onclick="adminGiris()">Giriş Yap</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL — Admin Tesis Listesi ══ -->
+<div class="modal-overlay" id="adminTesisModal">
+  <div class="modal-box">
+    <div class="modal-ttl">⚙️ Admin — Tesis Seç</div>
+    <div class="admin-tesis-liste">
+      <a class="admin-tesis-link" href="cesme-aat.html">
+        <span class="at-ikon">🌊</span><span class="at-ad">Çeşme AAT</span><span class="at-ok">›</span>
+      </a>
+      <a class="admin-tesis-link" href="doganbey-aat.html">
+        <span class="at-ikon">🌿</span><span class="at-ad">Doğanbey AAT</span><span class="at-ok">›</span>
+      </a>
+      <a class="admin-tesis-link" href="urla-aat.html">
+        <span class="at-ikon">🏔️</span><span class="at-ad">Urla AAT</span><span class="at-ok">›</span>
+      </a>
+      <a class="admin-tesis-link" href="ozdere-aat.html">
+        <span class="at-ikon">⛵</span><span class="at-ad">Özdere AAT</span><span class="at-ok">›</span>
+      </a>
+      <a class="admin-tesis-link" href="seferihisar-aat.html">
+        <span class="at-ikon">🍊</span><span class="at-ad">Seferihisar AAT</span><span class="at-ok">›</span>
+      </a>
+      <a class="admin-tesis-link" href="mordogan-aat.html">
+        <span class="at-ikon">⚓</span><span class="at-ad">Mordoğan AAT</span><span class="at-ok">›</span>
+      </a>
+    </div>
+    <button class="btn btn-sec" onclick="adminTesisKapat()" style="margin-top:16px;padding:12px">Kapat</button>
+  </div>
+</div>
+
 <footer>Developed by Mümin KOCATEPE</footer>
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Sabitler ──────────────────────────────────────────────────
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbwixLKgFPdHTHqhA9ABe7ol2DO4e5yUb6fau0wQ0uet5fUat25lD3UDc7JsrT5A1mU6gA/exec';
+const ADMIN_HASH = 'b3925345d69e49bbef8879d90e1b102a704698d05e08a03c01f6672322a977fc';
+const ADMIN_USER = 'yarımadaadmin';
 const SAIS_APK_URL = 'https://github.com/chemist45/SIM-Giris-SAIS-APK/releases/latest/download/SAISorumlusu.apk';
 
 const TESISLER = {
-  cesme:       { ad: 'Çeşme AAT',       tam: 'Çeşme Atıksu Arıtma Tesisi',       k: 'izmir_izsu_cesme',  s: 'izsu_1135',        r: '#0ea5e9', i: '🌊' },
-  doganbey:    { ad: 'Doğanbey AAT',    tam: 'Doğanbey Atıksu Arıtma Tesisi',    k: 't.dululoglu',      s: 'urla_izsu',        r: '#8b5cf6', i: '🌿' },
-  urla:        { ad: 'Urla AAT',        tam: 'Urla Atıksu Arıtma Tesisi',        k: 'k.dinler',         s: 'urla_izsu',        r: '#22c55e', i: '🏔️' },
-  ozdere:      { ad: 'Özdere AAT',      tam: 'Özdere Atıksu Arıtma Tesisi',      k: 'merve.barin',      s: 'izsu_ozdere',      r: '#f59e0b', i: '⛵' },
-  seferihisar: { ad: 'Seferihisar AAT', tam: 'Seferihisar Atıksu Arıtma Tesisi', k: 'gamze.tokdemir',   s: 'izsu_seferihisar', r: '#ef4444', i: '🍊' },
-  mordogan:    { ad: 'Mordoğan AAT',    tam: 'Mordoğan Atıksu Arıtma Tesisi',    k: 'efurkan.100',      s: '5414211516',       r: '#ec4899', i: '⚓'  }
+  cesme:       { ad:'Çeşme AAT',       tam:'Çeşme Atıksu Arıtma Tesisi',       k:'izmir_izsu_cesme',  s:'izsu_1135',        r:'#0ea5e9', i:'🌊' },
+  doganbey:    { ad:'Doğanbey AAT',    tam:'Doğanbey Atıksu Arıtma Tesisi',    k:'t.dululoglu',      s:'urla_izsu',        r:'#8b5cf6', i:'🌿' },
+  urla:        { ad:'Urla AAT',        tam:'Urla Atıksu Arıtma Tesisi',        k:'k.dinler',         s:'urla_izsu',        r:'#22c55e', i:'🏔️' },
+  ozdere:      { ad:'Özdere AAT',      tam:'Özdere Atıksu Arıtma Tesisi',      k:'merve.barin',      s:'izsu_ozdere',      r:'#f59e0b', i:'⛵' },
+  seferihisar: { ad:'Seferihisar AAT', tam:'Seferihisar Atıksu Arıtma Tesisi', k:'gamze.tokdemir',   s:'izsu_seferihisar', r:'#ef4444', i:'🍊' },
+  mordogan:    { ad:'Mordoğan AAT',    tam:'Mordoğan Atıksu Arıtma Tesisi',    k:'efurkan.100',      s:'5414211516',       r:'#ec4899', i:'⚓'  }
 };
 
-// ── Durum ─────────────────────────────────────────────────────
-let seciliId  = null;
-let kodPoll   = null;
-let saisAcik  = false;
+let seciliId = null, kodPoll = null, saisAcik = false;
 
-// ── Platform tespiti ──────────────────────────────────────────
-function isApk()  { return typeof window.AndroidNative !== 'undefined'; }
-function isIOS()  {
-  return /iP(hone|ad|od)/.test(navigator.userAgent) ||
-         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+/* ── Platform tespiti ──────────────────────────────────── */
+function isApk() { return typeof window.AndroidNative !== 'undefined'; }
+function isIOS() {
+  const ua = navigator.userAgent;
+  // iPhone / iPad / iPod doğrudan
+  if (/iPhone|iPad|iPod/.test(ua)) return true;
+  // iPadOS 13+ — MacIntel + dokunmatik
+  if (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) return true;
+  // Safari mobile user agent varyantları
+  if (/Mac OS X/.test(ua) && 'ontouchend' in document) return true;
+  return false;
 }
 
-// ── Ana menü oluştur ──────────────────────────────────────────
+/* ── Ana menü tesis listesi ────────────────────────────── */
 (function() {
   const liste = document.getElementById('tesisList');
   Object.entries(TESISLER).forEach(([id, t]) => {
@@ -242,61 +318,43 @@ function isIOS()  {
   });
 })();
 
-// ── Tesis aç ─────────────────────────────────────────────────
+/* ── Tesis aç ──────────────────────────────────────────── */
 function tesisAc(id) {
   seciliId = id;
   const t = TESISLER[id];
-
-  // Badge
   document.getElementById('tBadge').innerHTML =
     `<span class="t-badge-ikon">${t.i}</span>
      <span class="t-badge-ad" style="color:${t.r}">${t.ad}</span>`;
-
-  // Kimlik
   document.getElementById('credKullanici').textContent = t.k;
   document.getElementById('credSifre').textContent = t.s;
-
-  // Kod panelini sıfırla
   document.getElementById('kodPanel').style.display = 'none';
   document.getElementById('kodIcerik').className = 'kod-bos';
   document.getElementById('kodIcerik').innerHTML = '⏳ Kod bekleniyor...';
   document.getElementById('sonGun').textContent = '';
   stopPoll();
-
-  // SAİS paneli kapat
+  // SAİS paneli sıfırla
   saisAcik = false;
   document.getElementById('saisToggle').classList.remove('acik');
   document.getElementById('saisPanel').classList.remove('acik');
   document.getElementById('saisIcerik').innerHTML = '';
-
-  // Header subtitle
   document.getElementById('headerSub').textContent = t.ad;
-
-  // APK'da aktif tesis kaydet
-  if (isApk()) {
-    try { window.AndroidNative.setActiveTesis(id); } catch(e) {}
-  }
-
-  // Sayfa geçişi
+  if (isApk()) { try { window.AndroidNative.setActiveTesis(id); } catch(e){} }
   document.getElementById('p1').classList.remove('on');
   document.getElementById('p2').classList.add('on');
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
 
-// ── Geri ─────────────────────────────────────────────────────
 function sayfaGeri() {
-  stopPoll();
-  seciliId = null;
+  stopPoll(); seciliId = null;
   document.getElementById('headerSub').textContent = 'Tesisinizi seçerek giriş yapın';
   document.getElementById('p2').classList.remove('on');
   document.getElementById('p1').classList.add('on');
 }
 
-// ── SİM Giriş ────────────────────────────────────────────────
+/* ── SİM Giriş ─────────────────────────────────────────── */
 async function simGiris() {
   if (!seciliId) return;
-  const t = TESISLER[seciliId];
-  try { await navigator.clipboard.writeText(t.s); } catch(e) {}
+  try { await navigator.clipboard.writeText(TESISLER[seciliId].s); } catch(e){}
   window.open('https://sim.csb.gov.tr', '_blank');
   document.getElementById('kodPanel').style.display = 'block';
   toast('Şifre kopyalandı — SİM açılıyor');
@@ -305,221 +363,176 @@ async function simGiris() {
   kodPoll = setInterval(kodGetir, 15000);
 }
 
-// ── Kod getir ─────────────────────────────────────────────────
+/* ── Kod getir ─────────────────────────────────────────── */
 async function kodGetir() {
   if (!seciliId) return;
   const el = document.getElementById('kodIcerik');
   try {
     const res = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'getCode', tesis: seciliId })
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action:'getCode', tesis:seciliId})
     });
     const d = await res.json();
-    document.getElementById('sonGun').textContent =
-      'Son güncelleme: ' + new Date().toLocaleTimeString('tr-TR');
+    document.getElementById('sonGun').textContent = 'Son güncelleme: ' + new Date().toLocaleTimeString('tr-TR');
     if (d.ok) {
-      const dk = Math.floor(d.ageSec / 60), sn = d.ageSec % 60;
+      const dk = Math.floor(d.ageSec/60), sn = d.ageSec%60;
       const cls = d.ageSec < 120 ? 'yesil' : d.ageSec < 240 ? 'sari' : 'krmz';
       const m = d.body.match(/\d{4,8}/);
       const kod = m ? m[0] : d.body;
       el.className = cls;
-      el.innerHTML = `<div class="kod-box">
-        <div class="kod-num">${kod}</div>
-        <div class="kod-yas">${dk > 0 ? dk + ' dk ' : ''}${sn} sn önce geldi</div>
-      </div>`;
+      el.innerHTML = `<div class="kod-box"><div class="kod-num">${kod}</div><div class="kod-yas">${dk>0?dk+' dk ':''}${sn} sn önce geldi</div></div>`;
     } else if (d.expired) {
-      el.className = '';
-      el.innerHTML = '<div class="kod-bos">🔴 Kodun süresi doldu (5 dk) — yeniden giriş yapın</div>';
+      el.className=''; el.innerHTML='<div class="kod-bos">🔴 Kodun süresi doldu — yeniden giriş yapın</div>';
     } else {
-      el.className = '';
-      el.innerHTML = '<div class="kod-bos">⏳ Henüz kod gelmedi<br><small>SAİS sorumlusunun telefonu aktif mi?</small></div>';
+      el.className=''; el.innerHTML='<div class="kod-bos">⏳ Henüz kod gelmedi<br><small>SAİS sorumlusunun telefonu aktif mi?</small></div>';
     }
   } catch(e) {
-    el.className = '';
-    el.innerHTML = '<div class="kod-bos">❌ Bağlantı hatası — internet kontrol edin</div>';
+    el.className=''; el.innerHTML='<div class="kod-bos">❌ Bağlantı hatası — internet kontrol edin</div>';
   }
 }
+function stopPoll() { if(kodPoll){clearInterval(kodPoll);kodPoll=null;} }
 
-function stopPoll() { if (kodPoll) { clearInterval(kodPoll); kodPoll = null; } }
-
-// ── SAİS Accordion Aç/Kapat ───────────────────────────────────
+/* ── SAİS Accordion ────────────────────────────────────── */
 function saisAcKapat() {
   saisAcik = !saisAcik;
-  const toggle = document.getElementById('saisToggle');
-  const panel  = document.getElementById('saisPanel');
-  toggle.classList.toggle('acik', saisAcik);
-  panel.classList.toggle('acik', saisAcik);
-  if (saisAcik && !document.getElementById('saisIcerik').innerHTML) {
-    renderSaisPanel(seciliId);
-  }
+  document.getElementById('saisToggle').classList.toggle('acik', saisAcik);
+  document.getElementById('saisPanel').classList.toggle('acik', saisAcik);
+  if (saisAcik) renderSaisPanel(seciliId);
 }
 
-// ── SAİS Panel İçeriği ────────────────────────────────────────
 function renderSaisPanel(id) {
   const el = document.getElementById('saisIcerik');
   const t = TESISLER[id];
 
-  // APK modunda: otomatik iletim aktif
   if (isApk()) {
     el.innerHTML = `
       <span class="plt plt-apk">Android Uygulama</span>
-      <div class="banner-apk">
+      <div class="banner banner-apk">
         <div class="b-dot b-dot-apk"></div>
         <div>
           <div class="b-txt">SMS Otomatik İletiliyor</div>
-          <div class="b-alt">${t.ad} için 2FA SMS'leri arka planda sisteme iletiliyor</div>
+          <div class="b-alt">${t.ad} için 2FA SMS'ler arka planda sisteme iletiliyor</div>
         </div>
       </div>
-      <p style="font-size:12px;color:#64748b;line-height:1.6;">
-        Bu uygulama yüklü olduğu sürece ekstra kurulum gerekmez.<br>
-        Telefonu SİM girişi sırasında açık tutun.
-      </p>`;
+      <p style="font-size:12px;color:#64748b;line-height:1.6">Uygulama yüklü olduğu sürece ekstra kurulum gerekmez.</p>`;
     return;
   }
 
-  // iOS
   if (isIOS()) {
     el.innerHTML = `
       <span class="plt plt-ios">iPhone / iPad</span>
-      <p style="font-size:13px;color:#94a3b8;margin-bottom:14px;line-height:1.6;">
-        iOS Kısayol ile SİM'den gelen SMS'leri sisteme iletebilirsiniz. Ekstra uygulama gerekmez.
-      </p>
+      <p style="font-size:13px;color:#94a3b8;margin-bottom:14px;line-height:1.6">iOS Kısayol ile SİM SMS'lerini sisteme iletebilirsiniz. Ekstra uygulama gerekmez.</p>
       <div class="adim-liste">
-        <div class="adim">
-          <div class="adim-no">1</div>
-          <div class="adim-txt">Aşağıdaki butona basarak kısayolu indirin.
-            <small>Kısayollar uygulaması otomatik açılır.</small>
-          </div>
-        </div>
-        <div class="adim">
-          <div class="adim-no">2</div>
-          <div class="adim-txt">SİM'den SMS geldiğinde mesajı açın → <strong>Paylaş</strong> → <strong>SİM SMS İlet</strong>.
-            <small>Kısayol kodu GAS'a otomatik iletir.</small>
-          </div>
-        </div>
-        <div class="adim">
-          <div class="adim-no">3</div>
-          <div class="adim-txt">İşlem tamamdır. Alıcılar kodu otomatik alır.</div>
-        </div>
+        <div class="adim"><div class="adim-no">1</div><div class="adim-txt">Aşağıdaki butona basarak kısayolu indirin.<small>Kısayollar uygulaması otomatik açılır.</small></div></div>
+        <div class="adim"><div class="adim-no">2</div><div class="adim-txt">SİM SMS gelince: mesajı aç → <strong>Paylaş</strong> → <strong>SİM SMS İlet</strong>.<small>Kısayol kodu sisteme otomatik gönderir.</small></div></div>
+        <div class="adim"><div class="adim-no">3</div><div class="adim-txt">Tamamdır. Alıcılar kodu otomatik alır.</div></div>
       </div>
-      <button class="btn btn-ios" onclick="iosKisayoluIndir('${id}')" style="margin-top:14px">
-        📥 iOS Kısayolunu İndir
-      </button>`;
+      <button class="btn btn-ios" style="margin-top:14px" onclick="iosKisayoluIndir('${id}')">📥 iOS Kısayolunu İndir</button>`;
     return;
   }
 
-  // Android (APK yok — tarayıcı)
+  // Android (tarayıcı)
   el.innerHTML = `
     <span class="plt plt-android">Android</span>
-    <p style="font-size:13px;color:#94a3b8;margin-bottom:14px;line-height:1.6;">
-      SAİS Sorumlusu uygulamasını kurun. Arka planda SMS'leri otomatik iletir, tekrar kurulum gerekmez.
-    </p>
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:14px;line-height:1.6">SAİS Sorumlusu uygulamasını kurun. SMS'leri arka planda otomatik iletir.</p>
     <div class="adim-liste">
-      <div class="adim">
-        <div class="adim-no">1</div>
-        <div class="adim-txt">Aşağıdaki butona basarak APK'yı indirin.
-          <small>Dosya İndirilenler klasörüne gelir.</small>
-        </div>
-      </div>
-      <div class="adim">
-        <div class="adim-no">2</div>
-        <div class="adim-txt">İndirilen dosyaya dokunun → <strong>Yükle</strong>'ye basın.
-          <small>"Bilinmeyen kaynak" uyarısı gelirse "Yine de Yükle" seçin.</small>
-        </div>
-      </div>
-      <div class="adim">
-        <div class="adim-no">3</div>
-        <div class="adim-txt">Uygulamayı açın, tesisinizi seçin — hazır!
-          <small>Uygulama arka planda çalışır, SMS'leri otomatik iletir.</small>
-        </div>
-      </div>
+      <div class="adim"><div class="adim-no">1</div><div class="adim-txt">Aşağıdaki butona basarak APK'yı indirin.<small>Dosya İndirilenler klasörüne gelir.</small></div></div>
+      <div class="adim"><div class="adim-no">2</div><div class="adim-txt">İndirilen dosyaya dokunun → <strong>Yükle</strong>.<small>"Bilinmeyen kaynak" uyarısı gelirse "Yine de Yükle" seçin.</small></div></div>
+      <div class="adim"><div class="adim-no">3</div><div class="adim-txt">Uygulamayı açın, tesisinizi seçin — hazır!<small>Arka planda çalışır, SMS'leri otomatik iletir.</small></div></div>
     </div>
-    <a href="${SAIS_APK_URL}" class="btn btn-apk" style="margin-top:14px;text-decoration:none">
-      ⬇️ SAİS Sorumlusu APK'yı İndir
-    </a>`;
+    <a href="${SAIS_APK_URL}" class="btn btn-apk" style="margin-top:14px">⬇️ SAİS Sorumlusu APK İndir</a>`;
 }
 
-// ── iOS Kısayol ───────────────────────────────────────────────
+/* ── iOS Kısayol ───────────────────────────────────────── */
 function iosKisayoluIndir(id) {
   const t = TESISLER[id];
   const plist = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
+<plist version="1.0"><dict>
   <key>WFWorkflowClientVersion</key><string>1300.0.1</string>
   <key>WFWorkflowHasShortcutInputVariables</key><true/>
-  <key>WFWorkflowIcon</key>
-  <dict>
+  <key>WFWorkflowIcon</key><dict>
     <key>WFWorkflowIconStartColor</key><integer>-2071028991</integer>
     <key>WFWorkflowIconGlyphNumber</key><integer>59783</integer>
   </dict>
-  <key>WFWorkflowInputContentItemClasses</key>
-  <array><string>WFStringContentItem</string></array>
-  <key>WFWorkflowActions</key>
-  <array>
-    <dict>
-      <key>WFWorkflowActionIdentifier</key>
-      <string>is.workflow.actions.downloadurl</string>
-      <key>WFWorkflowActionParameters</key>
-      <dict>
-        <key>WFHTTPMethod</key><string>POST</string>
-        <key>WFURL</key><string>${GAS_URL}</string>
-        <key>WFHTTPBodyType</key><string>JSON</string>
-        <key>WFJSONValues</key>
-        <dict>
-          <key>Value</key>
+  <key>WFWorkflowInputContentItemClasses</key><array><string>WFStringContentItem</string></array>
+  <key>WFWorkflowActions</key><array><dict>
+    <key>WFWorkflowActionIdentifier</key><string>is.workflow.actions.downloadurl</string>
+    <key>WFWorkflowActionParameters</key><dict>
+      <key>WFHTTPMethod</key><string>POST</string>
+      <key>WFURL</key><string>${GAS_URL}</string>
+      <key>WFHTTPBodyType</key><string>JSON</string>
+      <key>WFJSONValues</key><dict><key>Value</key><dict>
+        <key>WFDictionaryFieldValueItems</key><array>
           <dict>
-            <key>WFDictionaryFieldValueItems</key>
-            <array>
-              <dict>
-                <key>WFItemType</key><integer>0</integer>
-                <key>WFKey</key><dict><key>Value</key><dict><key>string</key><string>action</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
-                <key>WFValue</key><dict><key>Value</key><dict><key>string</key><string>smsWebhook</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
-              </dict>
-              <dict>
-                <key>WFItemType</key><integer>0</integer>
-                <key>WFKey</key><dict><key>Value</key><dict><key>string</key><string>body</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
-                <key>WFValue</key>
-                <dict>
-                  <key>Value</key>
-                  <dict>
-                    <key>attachmentsByRange</key>
-                    <dict><key>{0, 1}</key><dict><key>Type</key><string>ExtensionInput</string></dict></dict>
-                    <key>string</key><string>&#xFFFC;</string>
-                  </dict>
-                  <key>WFSerializationType</key><string>WFTextTokenString</string>
-                </dict>
-              </dict>
-              <dict>
-                <key>WFItemType</key><integer>0</integer>
-                <key>WFKey</key><dict><key>Value</key><dict><key>string</key><string>tesis</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
-                <key>WFValue</key><dict><key>Value</key><dict><key>string</key><string>${id}</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
-              </dict>
-            </array>
+            <key>WFItemType</key><integer>0</integer>
+            <key>WFKey</key><dict><key>Value</key><dict><key>string</key><string>action</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
+            <key>WFValue</key><dict><key>Value</key><dict><key>string</key><string>smsWebhook</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
           </dict>
-          <key>WFSerializationType</key><string>WFDictionaryFieldValue</string>
-        </dict>
-      </dict>
+          <dict>
+            <key>WFItemType</key><integer>0</integer>
+            <key>WFKey</key><dict><key>Value</key><dict><key>string</key><string>body</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
+            <key>WFValue</key><dict><key>Value</key><dict>
+              <key>attachmentsByRange</key><dict><key>{0, 1}</key><dict><key>Type</key><string>ExtensionInput</string></dict></dict>
+              <key>string</key><string>&#xFFFC;</string>
+            </dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
+          </dict>
+          <dict>
+            <key>WFItemType</key><integer>0</integer>
+            <key>WFKey</key><dict><key>Value</key><dict><key>string</key><string>tesis</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
+            <key>WFValue</key><dict><key>Value</key><dict><key>string</key><string>${id}</string></dict><key>WFSerializationType</key><string>WFTextTokenString</string></dict>
+          </dict>
+        </array>
+      </dict><key>WFSerializationType</key><string>WFDictionaryFieldValue</string></dict>
     </dict>
-  </array>
+  </dict></dict></array>
   <key>WFWorkflowMinimumClientVersion</key><integer>900</integer>
   <key>WFWorkflowMinimumClientVersionString</key><string>900</string>
   <key>WFWorkflowOutputContentItemClasses</key><array/>
   <key>WFWorkflowImportQuestions</key><array/>
   <key>WFWorkflowName</key><string>SİM SMS İlet - ${t.ad}</string>
-</dict>
-</plist>`;
-  const blob = new Blob([plist], { type: 'application/octet-stream' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = 'SIM-SMS-Ilet-' + id + '.shortcut';
+</dict></plist>`;
+  const blob = new Blob([plist], {type:'application/octet-stream'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='SIM-SMS-Ilet-'+id+'.shortcut';
   document.body.appendChild(a); a.click();
   document.body.removeChild(a); URL.revokeObjectURL(url);
   toast('Kısayol indiriliyor...');
 }
 
-// ── Kopyala ───────────────────────────────────────────────────
+/* ── Admin Login ───────────────────────────────────────── */
+function adminLoginGoster() {
+  document.getElementById('adminUser').value = '';
+  document.getElementById('adminPass').value = '';
+  document.getElementById('adminHata').textContent = '';
+  document.getElementById('adminLoginModal').classList.add('acik');
+  setTimeout(() => document.getElementById('adminUser').focus(), 100);
+}
+function adminLoginKapat() { document.getElementById('adminLoginModal').classList.remove('acik'); }
+function adminTesisKapat() { document.getElementById('adminTesisModal').classList.remove('acik'); }
+
+async function adminGiris() {
+  const user = document.getElementById('adminUser').value.trim();
+  const pass = document.getElementById('adminPass').value;
+  const hata = document.getElementById('adminHata');
+  hata.textContent = '';
+  if (!user || !pass) { hata.textContent = 'Kullanıcı adı ve şifre gerekli'; return; }
+  if (user !== ADMIN_USER) { hata.textContent = 'Kullanıcı adı hatalı'; return; }
+  try {
+    const hash = await sha256(pass);
+    if (hash !== ADMIN_HASH) { hata.textContent = 'Şifre hatalı'; return; }
+  } catch(e) { hata.textContent = 'Hash hesaplanamadı'; return; }
+  adminLoginKapat();
+  document.getElementById('adminTesisModal').classList.add('acik');
+}
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ── Kopyala ───────────────────────────────────────────── */
 function kopyala(tip) {
   if (!seciliId) return;
   const t = TESISLER[seciliId];
@@ -527,24 +540,31 @@ function kopyala(tip) {
   const lbl = tip === 'kullanici' ? 'Kullanıcı adı' : 'Şifre';
   const fallback = () => {
     const ta = document.createElement('textarea');
-    ta.value = v; ta.style.cssText = 'position:fixed;opacity:0';
+    ta.value=v; ta.style.cssText='position:fixed;opacity:0';
     document.body.appendChild(ta); ta.select();
     document.execCommand('copy'); document.body.removeChild(ta);
-    toast(lbl + ' kopyalandı');
+    toast(lbl+' kopyalandı');
   };
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(v).then(() => toast(lbl + ' kopyalandı')).catch(fallback);
-  } else { fallback(); }
+  if (navigator.clipboard) navigator.clipboard.writeText(v).then(()=>toast(lbl+' kopyalandı')).catch(fallback);
+  else fallback();
 }
 
-// ── Toast ─────────────────────────────────────────────────────
+/* ── Toast ─────────────────────────────────────────────── */
 let _tt;
 function toast(msg) {
   const el = document.getElementById('toast');
-  el.textContent = msg; el.className = 'toast on';
-  if (_tt) clearTimeout(_tt);
-  _tt = setTimeout(() => el.className = 'toast', 2500);
+  el.textContent=msg; el.className='toast on';
+  if(_tt) clearTimeout(_tt);
+  _tt = setTimeout(()=>el.className='toast', 2500);
 }
+
+/* Modal dışına tıklayınca kapat */
+document.getElementById('adminLoginModal').addEventListener('click', function(e) {
+  if (e.target === this) adminLoginKapat();
+});
+document.getElementById('adminTesisModal').addEventListener('click', function(e) {
+  if (e.target === this) adminTesisKapat();
+});
 </script>
 </body>
 </html>
