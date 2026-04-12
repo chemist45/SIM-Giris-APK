@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         webView = findViewById(R.id.webView);
         webViewAyarla();
-        webView.loadUrl("file:///android_asset/index.html");
+        webView.loadUrl("file:///android_asset/sim-giris.html");
     }
 
     private void webViewAyarla() {
