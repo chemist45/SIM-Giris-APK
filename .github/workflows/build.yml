@@ -51,17 +51,17 @@ jobs:
 
     - name: APK İmzala
       run: |
-        jarsigner -verbose \
-          -sigalg SHA256withRSA \
-          -digestalg SHA-256 \
-          -keystore simgiris.keystore \
-          -storepass simgiris2024 \
-          -keypass simgiris2024 \
+        BUILD_TOOLS=$(ls ${ANDROID_HOME}/build-tools/ | sort -V | tail -1)
+        ${ANDROID_HOME}/build-tools/${BUILD_TOOLS}/zipalign -v 4 \
           app/build/outputs/apk/release/app-release-unsigned.apk \
-          simgiris
-        ${ANDROID_HOME}/build-tools/33.0.1/zipalign -v 4 \
-          app/build/outputs/apk/release/app-release-unsigned.apk \
-          SIMGiris.apk
+          aligned.apk
+        ${ANDROID_HOME}/build-tools/${BUILD_TOOLS}/apksigner sign \
+          --ks simgiris.keystore \
+          --ks-pass pass:simgiris2024 \
+          --key-pass pass:simgiris2024 \
+          --ks-key-alias simgiris \
+          --out SIMGiris.apk \
+          aligned.apk
 
     - name: İmzalı APK'yı yükle
       uses: actions/upload-artifact@v4
