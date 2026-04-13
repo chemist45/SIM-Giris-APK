@@ -418,29 +418,109 @@ function renderSaisPanel(id) {
     return;
   }
 
-  if (isIOS()) {
-    el.innerHTML = `
-      <span class="plt plt-ios">iPhone / iPad</span>
-      <p style="font-size:13px;color:#94a3b8;margin-bottom:14px;line-height:1.6">iOS Kısayol ile SİM SMS'lerini sisteme iletebilirsiniz. Ekstra uygulama gerekmez.</p>
-      <div class="adim-liste">
-        <div class="adim"><div class="adim-no">1</div><div class="adim-txt">Aşağıdaki butona basarak kısayolu indirin.<small>Kısayollar uygulaması otomatik açılır.</small></div></div>
-        <div class="adim"><div class="adim-no">2</div><div class="adim-txt">SİM SMS gelince: mesajı aç → <strong>Paylaş</strong> → <strong>SİM SMS İlet</strong>.<small>Kısayol kodu sisteme otomatik gönderir.</small></div></div>
-        <div class="adim"><div class="adim-no">3</div><div class="adim-txt">Tamamdır. Alıcılar kodu otomatik alır.</div></div>
-      </div>
-      <button class="btn btn-ios" style="margin-top:14px" onclick="iosKisayoluIndir('${id}')">📥 iOS Kısayolunu İndir</button>`;
-    return;
-  }
-
-  // Android (tarayıcı)
+  // iOS + Android her ikisini birden göster
   el.innerHTML = `
-    <span class="plt plt-android">Android</span>
-    <p style="font-size:13px;color:#94a3b8;margin-bottom:14px;line-height:1.6">SAİS Sorumlusu uygulamasını kurun. SMS'leri arka planda otomatik iletir.</p>
-    <div class="adim-liste">
-      <div class="adim"><div class="adim-no">1</div><div class="adim-txt">Aşağıdaki butona basarak APK'yı indirin.<small>Dosya İndirilenler klasörüne gelir.</small></div></div>
-      <div class="adim"><div class="adim-no">2</div><div class="adim-txt">İndirilen dosyaya dokunun → <strong>Yükle</strong>.<small>"Bilinmeyen kaynak" uyarısı gelirse "Yine de Yükle" seçin.</small></div></div>
-      <div class="adim"><div class="adim-no">3</div><div class="adim-txt">Uygulamayı açın, tesisinizi seçin — hazır!<small>Arka planda çalışır, SMS'leri otomatik iletir.</small></div></div>
+    <p style="font-size:12px;color:#64748b;margin-bottom:14px">Cihazınıza uygun seçeneği kullanın:</p>
+
+    <div style="background:#0d1f2f;border:1px solid #1c3a5f;border-radius:12px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:18px"></span>
+        <span class="plt plt-ios" style="margin:0">iPhone / iPad — Otomatik Otomasyon</span>
+      </div>
+      <p style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.6">Kısayollar uygulaması ile SMS gelince <strong style="color:#a1a1aa">otomatik</strong> sisteme iletilir. Hiçbir şey yapmanıza gerek kalmaz.</p>
+      <div class="adim-liste" style="margin-bottom:14px">
+        <div class="adim"><div class="adim-no">1</div><div class="adim-txt"><strong>Kısayollar</strong> uygulamasını aç → alt menüden <strong>Otomasyon</strong> sekmesine geç → sağ üstte <strong>+</strong> simgesine bas.<small>Uygulama yüklü değilse App Store'dan ücretsiz indir.</small></div></div>
+        <div class="adim"><div class="adim-no">2</div><div class="adim-txt"><strong>Kişisel Otomasyon Oluştur</strong> → listeden <strong>Mesaj</strong> seç.<small>Aşağı kaydırarak "Mesaj" seçeneğini bulabilirsin.</small></div></div>
+        <div class="adim"><div class="adim-no">3</div><div class="adim-txt">Gönderen alanına <strong>csb.gov.tr</strong> yaz → <strong>İçerik</strong> alanına <strong>kod</strong> yaz → <strong>Çalıştırmadan Önce Sor'u KAPAT</strong>.<small>Bu sayede SMS gelince kullanıcı onayı olmadan otomatik çalışır.</small></div></div>
+        <div class="adim"><div class="adim-no">4</div><div class="adim-txt"><strong>Sonraki</strong> → <strong>Eylem Ekle</strong> → arama kutusuna <strong>URL içeriğini al</strong> yaz → seç.<small>"Web İsteği" veya "URL'nin İçeriğini Al" olarak da görünebilir.</small></div></div>
+        <div class="adim"><div class="adim-no">5</div><div class="adim-txt">URL alanına yapıştır: <span style="font-family:monospace;font-size:11px;color:#38bdf8;word-break:break-all">${GAS_URL}</span><br><button onclick="urlKopyala()" style="margin-top:8px;padding:7px 14px;border-radius:8px;border:1px solid #38bdf8;background:rgba(56,189,248,0.1);color:#38bdf8;font-size:12px;font-weight:700;cursor:pointer;width:100%">📋 URL'yi Kopyala</button></div></div>
+        <div class="adim"><div class="adim-no">6</div><div class="adim-txt">Yöntem: <strong>POST</strong> → İstek Gövdesi: <strong>JSON</strong> → 3 alan ekle:<br>
+          <span style="font-family:monospace;font-size:11px;color:#4ade80">action</span> = <span style="font-family:monospace;font-size:11px;color:#fbbf24">smsWebhook</span><br>
+          <span style="font-family:monospace;font-size:11px;color:#4ade80">body</span> = <span style="font-family:monospace;font-size:11px;color:#fbbf24">Kısayol Girdisi</span> (değişken seç)<br>
+          <span style="font-family:monospace;font-size:11px;color:#4ade80">tesis</span> = <span style="font-family:monospace;font-size:11px;color:#fbbf24">${id}</span>
+          <small>body alanında klavyedeki değişken simgesine bas → "Kısayol Girdisi" seç.</small></div></div>
+        <div class="adim"><div class="adim-no">7</div><div class="adim-txt"><strong>Sonraki → Bitti</strong>. Artık csb.gov.tr'den SMS gelince otomatik sisteme iletilir.</div></div>
+      </div>
     </div>
-    <a href="${SAIS_APK_URL}" class="btn btn-apk" style="margin-top:14px">⬇️ SAİS Sorumlusu APK İndir</a>`;
+
+    <div style="background:#0a1f12;border:1px solid #1a3a24;border-radius:12px;padding:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:18px">🤖</span>
+        <span class="plt plt-android" style="margin:0">Android</span>
+      </div>
+      <div class="adim-liste" style="margin-bottom:12px">
+        <div class="adim"><div class="adim-no">1</div><div class="adim-txt">Aşağıdaki butona basarak APK'yı indirin.<small>Dosya İndirilenler klasörüne gelir.</small></div></div>
+        <div class="adim"><div class="adim-no">2</div><div class="adim-txt">İndirilen dosyaya dokunun → <strong>Yükle</strong>.<small>"Bilinmeyen kaynak" uyarısı gelirse "Yine de Yükle" seçin.</small></div></div>
+        <div class="adim"><div class="adim-no">3</div><div class="adim-txt">Uygulamayı açın, tesisinizi seçin — hazır!<small>Arka planda çalışır, SMS'leri otomatik iletir.</small></div></div>
+      </div>
+      <a href="${SAIS_APK_URL}" class="btn btn-apk">⬇️ SAİS Sorumlusu APK İndir</a>
+    </div>
+
+    <div style="background:var(--surf,#041428);border:1px solid var(--brd,#1e293b);border-radius:12px;padding:14px;margin-top:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--mut,#64748b);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Bağlantı Testi</div>
+      <div id="saisTestBox" style="background:#020c18;border:1px solid var(--brd,#1e293b);border-radius:10px;padding:13px;margin-bottom:8px;font-size:13px;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;transition:border-color .3s">—</div>
+      <button onclick="baglantiTesti()" style="width:100%;padding:13px;border-radius:10px;border:1px solid var(--brd,#1e293b);background:var(--surf,#041428);color:var(--txt,#e2e8f0);font-size:13px;font-weight:700;cursor:pointer">🔗 Bağlantıyı Test Et</button>
+    </div>`;
+}
+
+/* ── GAS Bağlantı Testi ────────────────────────────────── */
+async function baglantiTesti() {
+  const box = document.getElementById('saisTestBox');
+  box.style.color = '';
+  box.style.borderColor = '';
+  box.textContent = '⏳ Test ediliyor...';
+  try {
+    if (isApk()) {
+      const json = window.AndroidNative.pingGas(GAS_URL);
+      const d = JSON.parse(json);
+      if (d.ok) {
+        box.style.color = '#22c55e';
+        box.style.borderColor = '#22c55e33';
+        box.textContent = '✅ GAS bağlantısı başarılı';
+      } else {
+        box.style.color = '#ef4444';
+        box.textContent = '❌ GAS hata: ' + (d.error || 'bilinmeyen');
+      }
+    } else {
+      let ok = false;
+      try {
+        const res = await fetch(GAS_URL + '?action=ping', { cache: 'no-store' });
+        const d = await res.json();
+        ok = !!(d && d.ok);
+      } catch (_) {
+        await fetch(GAS_URL, { mode: 'no-cors', cache: 'no-store' });
+        ok = true;
+      }
+      box.style.color = '#22c55e';
+      box.style.borderColor = '#22c55e33';
+      box.textContent = '✅ GAS bağlantısı başarılı';
+    }
+  } catch (e) {
+    box.style.color = '#ef4444';
+    box.style.borderColor = '#ef444433';
+    box.textContent = '❌ Bağlantı kurulamadı — internet kontrol edin';
+  }
+}
+
+/* ── URL Kopyala ───────────────────────────────────────── */
+function urlKopyala() {
+  const fallback = (text) => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none;top:0;left:0';
+    document.body.appendChild(ta);
+    ta.select(); ta.setSelectionRange(0, 99999);
+    try { document.execCommand('copy'); toast('URL panoya kopyalandı ✓'); }
+    catch (_) { toast("URL'yi manuel kopyalayın"); }
+    document.body.removeChild(ta);
+  };
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(GAS_URL)
+      .then(() => toast('URL panoya kopyalandı ✓'))
+      .catch(() => fallback(GAS_URL));
+  } else {
+    fallback(GAS_URL);
+  }
 }
 
 /* ── iOS Kısayol ───────────────────────────────────────── */
