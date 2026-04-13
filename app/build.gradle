@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace 'com.izsu.simgiris'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.izsu.simgiris"
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
     }
@@ -38,6 +38,6 @@ configurations.all {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.core:core:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core:1.13.1'
 }
