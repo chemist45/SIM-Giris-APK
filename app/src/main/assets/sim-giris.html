@@ -441,6 +441,9 @@ function renderSaisPanel(id) {
           <small>body alanında klavyedeki değişken simgesine bas → "Kısayol Girdisi" seç.</small></div></div>
         <div class="adim"><div class="adim-no">7</div><div class="adim-txt"><strong>Sonraki → Bitti</strong>. Artık csb.gov.tr'den SMS gelince otomatik sisteme iletilir.</div></div>
       </div>
+      <button onclick="iosKisayoluIndir('${id}')" style="width:100%;padding:13px;border-radius:10px;background:linear-gradient(135deg,#1c1c1e,#2c2c2e);border:1px solid #3c3c3e;color:#fff;font-size:13px;font-weight:700;cursor:pointer;margin-top:4px">
+        📥 iOS Kısayolunu İndir (.shortcut)
+      </button>
     </div>
 
     <div style="background:#0a1f12;border:1px solid #1a3a24;border-radius:12px;padding:14px">
@@ -450,16 +453,12 @@ function renderSaisPanel(id) {
       </div>
       <div class="adim-liste" style="margin-bottom:12px">
         <div class="adim"><div class="adim-no">1</div><div class="adim-txt">Aşağıdaki butona basarak APK'yı indirin.<small>Dosya İndirilenler klasörüne gelir.</small></div></div>
-        <div class="adim"><div class="adim-no">2</div><div class="adim-txt">İndirilen dosyaya dokunun → <strong>Yükle</strong>.<small>"Bilinmeyen kaynak" uyarısı gelirse "Yine de Yükle" seçin.</small></div></div>
+        <div class="adim"><div class="adim-no">2</div><div class="adim-txt">İndirilen dosyaya dokunun → <strong>Yükle</strong>.<small>POCO/Xiaomi: Ayarlar → Güvenlik → Bilinmeyen Kaynaklardan Yükle → İzin ver.</small></div></div>
         <div class="adim"><div class="adim-no">3</div><div class="adim-txt">Uygulamayı açın, tesisinizi seçin — hazır!<small>Arka planda çalışır, SMS'leri otomatik iletir.</small></div></div>
       </div>
-      <a href="${SAIS_APK_URL}" class="btn btn-apk">⬇️ SAİS Sorumlusu APK İndir</a>
-    </div>
-
-    <div style="background:var(--surf,#041428);border:1px solid var(--brd,#1e293b);border-radius:12px;padding:14px;margin-top:12px">
-      <div style="font-size:11px;font-weight:700;color:var(--mut,#64748b);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Bağlantı Testi</div>
       <div id="saisTestBox" style="background:#020c18;border:1px solid var(--brd,#1e293b);border-radius:10px;padding:13px;margin-bottom:8px;font-size:13px;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;transition:border-color .3s">—</div>
-      <button onclick="baglantiTesti()" style="width:100%;padding:13px;border-radius:10px;border:1px solid var(--brd,#1e293b);background:var(--surf,#041428);color:var(--txt,#e2e8f0);font-size:13px;font-weight:700;cursor:pointer">🔗 Bağlantıyı Test Et</button>
+      <button onclick="baglantiTesti()" style="width:100%;padding:13px;border-radius:10px;border:1px solid var(--brd,#1e293b);background:var(--surf,#041428);color:var(--txt,#e2e8f0);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px">🔗 Önce Bağlantıyı Test Et</button>
+      <a href="${SAIS_APK_URL}" class="btn btn-apk">⬇️ SAİS Sorumlusu APK İndir</a>
     </div>`;
 }
 

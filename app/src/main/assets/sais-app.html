@@ -113,12 +113,7 @@ footer{text-align:center;font-size:11px;color:var(--mut);padding:18px 16px;borde
     <!-- Platform paneli -->
     <div id="platformPanel"></div>
 
-    <!-- Bağlantı testi -->
-    <div class="card">
-      <div class="card-ttl">Bağlantı Testi</div>
-      <div class="test-box" id="testBox">—</div>
-      <button class="btn btn-sec" onclick="baglantiTesti()">🔗 Bağlantıyı Test Et</button>
-    </div>
+    <!-- Bağlantı testi: Android kartının içine taşındı -->
   </div>
 </main>
 
@@ -127,6 +122,7 @@ footer{text-align:center;font-size:11px;color:var(--mut);padding:18px 16px;borde
 
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbwixLKgFPdHTHqhA9ABe7ol2DO4e5yUb6fau0wQ0uet5fUat25lD3UDc7JsrT5A1mU6gA/exec';
+const SAIS_APK_URL = 'https://github.com/chemist45/SIM-Giris-SAIS-APK/releases/latest/download/SAISorumlusu.apk';
 
 const T = {
   cesme:       { ad: 'Çeşme AAT',       r: '#0ea5e9', i: '💧' },
@@ -223,60 +219,78 @@ function renderPlatform(id) {
     return;
   }
 
-  if (isIOS()) {
-    el.innerHTML = `
-      <div class="card">
-        <span class="plt-badge plt-ios">iPhone / iPad</span>
-        <div class="card-ttl">iOS Kısayol Kurulumu</div>
-        <div class="adim-liste">
-          <div class="adim">
-            <div class="adim-no">1</div>
-            <div class="adim-txt">Aşağıdaki butona basarak kısayolu indirin.<br><small>Dosya otomatik olarak Kısayollar uygulamasına eklenir.</small></div>
-          </div>
-          <div class="adim">
-            <div class="adim-no">2</div>
-            <div class="adim-txt">SİM'den SMS geldiğinde mesajı seçin → <b>Paylaş</b> → <b>SİM SMS İlet</b>.<br><small>Kısayol kodu GAS'a otomatik iletir.</small></div>
-          </div>
-          <div class="adim">
-            <div class="adim-no">3</div>
-            <div class="adim-txt">İşlem tamamdır. Alıcılar kodu otomatik alır.</div>
-          </div>
+  // iOS + Android her ikisini birden göster
+  el.innerHTML = `
+    <p style="font-size:12px;color:var(--mut);margin-bottom:12px">Cihazınıza uygun seçeneği kullanın:</p>
+
+    <div class="card" style="border-color:#3c3c3e44">
+      <span class="plt-badge plt-ios">iPhone / iPad — Otomatik Otomasyon</span>
+      <div class="card-ttl">iOS Kısayollar ile Otomatik SMS İletimi</div>
+      <p style="font-size:12px;color:var(--mut);margin-bottom:12px;line-height:1.6">SMS gelince <b style="color:var(--txt)">otomatik</b> sisteme iletilir — hiçbir şey yapmanıza gerek kalmaz.</p>
+      <div class="adim-liste">
+        <div class="adim">
+          <div class="adim-no">1</div>
+          <div class="adim-txt"><b>Kısayollar</b> uygulamasını aç → alt menüden <b>Otomasyon</b> sekmesi → sağ üstte <b>+</b> simgesi.<br><small>Uygulama yüklü değilse App Store'dan ücretsiz indir.</small></div>
         </div>
-        <button class="btn btn-ios" onclick="iosKisayoluIndir('${id}')" style="margin-top:12px">
-          📥 iOS Kısayolunu İndir
-        </button>
-      </div>`;
-  } else {
-    el.innerHTML = `
-      <div class="card">
-        <span class="plt-badge plt-android">Android — Tarayıcı</span>
-        <div class="card-ttl">MacroDroid ile Otomatik İletim</div>
-        <div class="adim-liste">
-          <div class="adim">
-            <div class="adim-no">1</div>
-            <div class="adim-txt">MacroDroid uygulamasını yükleyin ve açın.<br><small>Play Store'dan ücretsiz indirilebilir.</small></div>
-          </div>
-          <div class="adim">
-            <div class="adim-no">2</div>
-            <div class="adim-txt"><b>Trigger:</b> SMS Alındı (gönderen: csb.gov.tr)<br><b>Action:</b> HTTP İsteği → POST → JSON body<br><small>{"action":"smsWebhook","body":"[SMS içeriği]","tesis":"${id}"}</small></div>
-          </div>
-          <div class="adim">
-            <div class="adim-no">3</div>
-            <div class="adim-txt">Makro aktif olduğunda SİM SMS'leri otomatik iletilir.</div>
-          </div>
+        <div class="adim">
+          <div class="adim-no">2</div>
+          <div class="adim-txt"><b>Kişisel Otomasyon Oluştur</b> → listeden <b>Mesaj</b> seç.</div>
         </div>
-        <button class="btn btn-sec" onclick="macroDroidAc()" style="margin-top:12px">
-          📲 MacroDroid'i Aç
-        </button>
-      </div>`;
-  }
+        <div class="adim">
+          <div class="adim-no">3</div>
+          <div class="adim-txt">Gönderen: <b>csb.gov.tr</b> — İçerik: <b>kod</b> — <b>Çalıştırmadan Önce Sor'u KAPAT</b>.<br><small>Kapalı olmazsa her SMS'te onay penceresi çıkar.</small></div>
+        </div>
+        <div class="adim">
+          <div class="adim-no">4</div>
+          <div class="adim-txt"><b>Sonraki</b> → <b>Eylem Ekle</b> → arama: <b>URL içeriğini al</b> → seç.</div>
+        </div>
+        <div class="adim">
+          <div class="adim-no">5</div>
+          <div class="adim-txt">URL alanına yapıştır:<br><span style="font-family:monospace;font-size:10px;color:#38bdf8;word-break:break-all">${GAS_URL}</span></div>
+        </div>
+        <div class="adim">
+          <div class="adim-no">6</div>
+          <div class="adim-txt">Yöntem: <b>POST</b> → İstek Gövdesi: <b>JSON</b> → 3 alan ekle:<br>
+            <span style="font-family:monospace;font-size:11px;color:#4ade80">action</span> = <span style="font-family:monospace;font-size:11px;color:#fbbf24">smsWebhook</span><br>
+            <span style="font-family:monospace;font-size:11px;color:#4ade80">body</span> = <span style="font-family:monospace;font-size:11px;color:#fbbf24">Kısayol Girdisi</span><br>
+            <span style="font-family:monospace;font-size:11px;color:#4ade80">tesis</span> = <span style="font-family:monospace;font-size:11px;color:#fbbf24">${id}</span><br>
+            <small>body için klavyedeki değişken simgesine bas → "Kısayol Girdisi" seç.</small></div>
+        </div>
+        <div class="adim">
+          <div class="adim-no">7</div>
+          <div class="adim-txt"><b>Sonraki → Bitti.</b> Artık csb.gov.tr'den SMS gelince otomatik iletilir.</div>
+        </div>
+      </div>
+      <button class="btn btn-ios" onclick="iosKisayoluIndir('${id}')" style="margin-top:12px">
+        📥 iOS Kısayolunu İndir (.shortcut)
+      </button>
+    </div>
+
+    <div class="card" style="border-color:#22c55e33">
+      <span class="plt-badge plt-android">Android</span>
+      <div class="card-ttl">SAİS Sorumlusu APK Kurulumu</div>
+      <div class="adim-liste">
+        <div class="adim">
+          <div class="adim-no">1</div>
+          <div class="adim-txt">Aşağıdaki butona basarak APK'yı indirin.<br><small>Dosya İndirilenler klasörüne gelir.</small></div>
+        </div>
+        <div class="adim">
+          <div class="adim-no">2</div>
+          <div class="adim-txt">İndirilen dosyaya dokunun → <b>Yükle</b>.<br><small>POCO/Xiaomi: Ayarlar → Güvenlik → Bilinmeyen Kaynaklardan Yükle → İzin ver.</small></div>
+        </div>
+        <div class="adim">
+          <div class="adim-no">3</div>
+          <div class="adim-txt">Uygulamayı açın, tesisinizi seçin — hazır!<br><small>Arka planda çalışır, SMS'leri otomatik iletir.</small></div>
+        </div>
+      </div>
+      <div class="test-box" id="testBox" style="margin-top:12px">—</div>
+      <button class="btn btn-sec" onclick="baglantiTesti()" style="margin-bottom:8px">🔗 Önce Bağlantıyı Test Et</button>
+      <a href="${SAIS_APK_URL}" class="btn btn-apk" style="display:block;text-align:center;text-decoration:none">
+        ⬇️ SAİS Sorumlusu APK İndir
+      </a>
+    </div>`;
 }
 
-function macroDroidAc() {
-  const pkg = 'com.arlosoft.macrodroid';
-  const fb = encodeURIComponent('https://play.google.com/store/apps/details?id=' + pkg);
-  window.location.href = 'intent://main#Intent;package=' + pkg + ';S.browser_fallback_url=' + fb + ';end';
-}
 
 function iosKisayoluIndir(id) {
   const t = T[id];
@@ -362,16 +376,19 @@ async function baglantiTesti() {
   box.style.borderColor = '';
   box.textContent = '⏳ Test ediliyor...';
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'ping' })
-    });
-    const d = await res.json();
+    let d;
+    if (isApk()) {
+      // APK içi: Java'dan HTTP isteği — CORS ve redirect sorunu yok
+      const json = window.AndroidNative.pingGas(GAS_URL);
+      d = JSON.parse(json);
+    } else {
+      const res = await fetch(GAS_URL + '?action=ping');
+      d = await res.json();
+    }
     if (d.ok) {
       box.style.color = '#22c55e';
       box.style.borderColor = '#22c55e33';
-      box.textContent = '✅ ' + d.message;
+      box.textContent = '✅ GAS bağlantısı başarılı';
     } else {
       box.style.color = '#ef4444';
       box.textContent = '❌ GAS hata: ' + (d.error || 'bilinmeyen');
