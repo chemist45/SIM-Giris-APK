@@ -22,6 +22,10 @@ public class SmsReceiver extends BroadcastReceiver {
     private static final String GAS_URL =
         "https://script.google.com/macros/s/AKfycbwixLKgFPdHTHqhA9ABe7ol2DO4e5yUb6fau0wQ0uet5fUat25lD3UDc7JsrT5A1mU6gA/exec";
 
+    // Firebase Realtime Database — SMS log (kurallar: sms_log .write: true)
+    private static final String RTDB_URL =
+        "https://sim-giris-yarimada-default-rtdb.firebaseio.com/sms_log.json";
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
@@ -47,16 +51,20 @@ public class SmsReceiver extends BroadcastReceiver {
         }
 
         String icerik = tamMesaj.toString();
-        Log.d(TAG, "SMS alındı | Gönderen: " + gonderen + " | İçerik: " + icerik);
+        String gonderenFinal = gonderen != null ? gonderen : "";
+        Log.d(TAG, "SMS alındı | Gönderen: " + gonderenFinal + " | İçerik: " + icerik);
 
-        // GAS'a ilet
-        gasaGonder(context, icerik, gonderen != null ? gonderen : "");
-    }
-
-    private void gasaGonder(Context context, String icerik, String gonderen) {
         SharedPreferences prefs = context.getSharedPreferences(AndroidBridge.PREFS, Context.MODE_PRIVATE);
         String aktivTesis = prefs.getString("activeTesis", "");
 
+        // GAS'a ilet (mevcut davranış korunuyor)
+        gasaGonder(context, icerik, gonderenFinal, aktivTesis);
+
+        // Firebase RTDB'ye log yaz
+        rtdbYaz(icerik, gonderenFinal, aktivTesis);
+    }
+
+    private void gasaGonder(Context context, String icerik, String gonderen, String aktivTesis) {
         new Thread(() -> {
             try {
                 JSONObject json = new JSONObject();
@@ -85,6 +93,38 @@ public class SmsReceiver extends BroadcastReceiver {
 
             } catch (Exception e) {
                 Log.e(TAG, "GAS iletme hatası: " + e.getMessage());
+            }
+        }).start();
+    }
+
+    private void rtdbYaz(String icerik, String gonderen, String tesisId) {
+        new Thread(() -> {
+            try {
+                JSONObject json = new JSONObject();
+                json.put("tesis",     tesisId);
+                json.put("body",      icerik);
+                json.put("from",      gonderen);
+                json.put("timestamp", System.currentTimeMillis());
+
+                URL url = new URL(RTDB_URL);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(10000);
+
+                byte[] veri = json.toString().getBytes(StandardCharsets.UTF_8);
+                try (OutputStream os = conn.getOutputStream()) {
+                    os.write(veri);
+                }
+
+                int yanit = conn.getResponseCode();
+                Log.d(TAG, "RTDB yanıtı: " + yanit);
+                conn.disconnect();
+
+            } catch (Exception e) {
+                Log.e(TAG, "RTDB yazma hatası: " + e.getMessage());
             }
         }).start();
     }

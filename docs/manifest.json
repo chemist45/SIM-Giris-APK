@@ -1,0 +1,15 @@
+{
+  "name": "Yarımada SİM Giriş Sistemi",
+  "short_name": "SİM Giriş",
+  "description": "İZSU Yarımada Tesisler SİM Giriş Sistemi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020c18",
+  "theme_color": "#0ea5e9",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icons/icon-96.png",  "sizes": "96x96",   "type": "image/png" },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-192.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
