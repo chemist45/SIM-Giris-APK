@@ -614,7 +614,7 @@ async function adminGiris() {
   const hata = document.getElementById('adminHata');
   hata.textContent = '';
   if (!user || !pass) { hata.textContent = 'Kullanıcı adı ve şifre gerekli'; return; }
-  if (user !== ADMIN_USER) { hata.textContent = 'Kullanıcı adı hatalı'; return; }
+  if (user.toLowerCase() !== ADMIN_USER.toLowerCase()) { hata.textContent = 'Kullanıcı adı hatalı'; return; }
   try {
     const hash = await sha256(pass);
     if (hash !== ADMIN_HASH) { hata.textContent = 'Şifre hatalı'; return; }
