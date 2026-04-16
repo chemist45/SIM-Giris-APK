@@ -20,7 +20,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
     // GAS URL — tüm tesisler için aynı
     private static final String GAS_URL =
-        "https://script.google.com/macros/s/AKfycbwixLKgFPdHTHqhA9ABe7ol2DO4e5yUb6fau0wQ0uet5fUat25lD3UDc7JsrT5A1mU6gA/exec";
+        "https://script.google.com/macros/s/AKfycbwF8vf2dxdhVEuhGDum0wl4KQMkuosUh_qoxOPOXxlRa0LPQhYITLSmg5haTVBDc6_F/exec";
 
     // Firebase Realtime Database — SMS log (kurallar: sms_log .write: true)
     private static final String RTDB_URL =
