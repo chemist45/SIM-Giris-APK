@@ -190,9 +190,14 @@ function tesisSeç(id) {
 }
 
 function geri() {
-  secili = null;
-  document.getElementById('s2').classList.remove('on');
-  document.getElementById('s1').classList.add('on');
+  if (isApk()) {
+    // APK'dan açıldıysa sim-giris.html'e dön
+    window.location.href = 'file:///android_asset/sim-giris.html';
+  } else {
+    secili = null;
+    document.getElementById('s2').classList.remove('on');
+    document.getElementById('s1').classList.add('on');
+  }
 }
 
 function renderPlatform(id) {
@@ -411,6 +416,25 @@ function toast(msg) {
   if (tt) clearTimeout(tt);
   tt = setTimeout(() => el.className = 'toast', 2500);
 }
+
+// APK modunda: aktif tesis varsa direkt kurulum ekranına geç
+(function() {
+  if (!isApk()) return;
+  try {
+    const aktif = window.AndroidNative.getActiveTesis();
+    if (aktif && T[aktif]) {
+      tesisSeç(aktif);
+      return;
+    }
+  } catch(e) {}
+  // Aktif tesis yoksa s1'e Ana Menü geri butonu ekle
+  const btn = document.createElement('button');
+  btn.className = 'back';
+  btn.innerHTML = '← Ana Menü';
+  btn.onclick = () => { window.location.href = 'file:///android_asset/sim-giris.html'; };
+  const s1 = document.getElementById('s1');
+  s1.insertBefore(btn, s1.firstChild);
+})();
 </script>
 </body>
 </html>

@@ -414,7 +414,10 @@ function renderSaisPanel(id) {
           <div class="b-alt">${t.ad} için 2FA SMS'ler arka planda sisteme iletiliyor</div>
         </div>
       </div>
-      <p style="font-size:12px;color:#64748b;line-height:1.6">Uygulama yüklü olduğu sürece ekstra kurulum gerekmez.</p>`;
+      <button onclick="saisKurulumAc()" class="btn btn-sim" style="margin-top:10px">
+        📱 SAİS Sorumlusu Sistem Kurulumu
+      </button>
+      <p style="font-size:12px;color:#64748b;line-height:1.6;margin-top:6px">Bağlantı testi yapabilir, iPhone/iPad kurulum rehberini görebilirsiniz.</p>`;
     return;
   }
 
@@ -499,6 +502,14 @@ async function baglantiTesti() {
     box.style.borderColor = '#ef444433';
     box.textContent = '❌ Bağlantı kurulamadı — internet kontrol edin';
   }
+}
+
+/* ── SAİS Kurulum Ekranı Aç ────────────────────────────── */
+function saisKurulumAc() {
+  if (seciliId) {
+    try { window.AndroidNative.setActiveTesis(seciliId); } catch(e) {}
+  }
+  window.location.href = 'file:///android_asset/sais-app.html';
 }
 
 /* ── URL Kopyala ───────────────────────────────────────── */

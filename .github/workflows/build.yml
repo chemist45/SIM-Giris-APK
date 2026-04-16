@@ -1,4 +1,4 @@
-name: APK Build
+name: SİM Giriş APK Build
 
 on:
   push:
@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Kodu indir
@@ -18,18 +20,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
-    - name: İmzalama Anahtarı Oluştur
-      run: |
-        keytool -genkeypair \
-          -alias simgiris \
-          -keypass simgiris2024 \
-          -keystore simgiris.keystore \
-          -storepass simgiris2024 \
-          -dname "CN=IZSU Yarimada, OU=Tesisler, O=IZSU, L=Izmir, ST=Izmir, C=TR" \
-          -keyalg RSA \
-          -keysize 2048 \
-          -validity 10000
 
     - name: Gradle kur ve Wrapper oluştur
       run: |
@@ -47,25 +37,46 @@ jobs:
         key: gradle-${{ hashFiles('**/*.gradle*') }}
 
     - name: Release APK Derle
-      run: ./gradlew assembleRelease --stacktrace
+      run: ./gradlew assembleRelease --stacktrace -PbuildVersionCode=${{ github.run_number }}
 
-    - name: APK İmzala
+    - name: APK İmzala (sabit keystore)
       run: |
         BUILD_TOOLS=$(ls ${ANDROID_HOME}/build-tools/ | sort -V | tail -1)
         ${ANDROID_HOME}/build-tools/${BUILD_TOOLS}/zipalign -v 4 \
           app/build/outputs/apk/release/app-release-unsigned.apk \
           aligned.apk
         ${ANDROID_HOME}/build-tools/${BUILD_TOOLS}/apksigner sign \
-          --ks simgiris.keystore \
+          --ks simgiris-release.p12 \
+          --ks-type PKCS12 \
           --ks-pass pass:simgiris2024 \
           --key-pass pass:simgiris2024 \
           --ks-key-alias simgiris \
           --out SIMGiris.apk \
           aligned.apk
+        echo "İmza doğrulama:"
+        ${ANDROID_HOME}/build-tools/${BUILD_TOOLS}/apksigner verify --verbose SIMGiris.apk
 
-    - name: İmzalı APK'yı yükle
+    - name: Artifact yükle
       uses: actions/upload-artifact@v4
       with:
-        name: SIMGiris-Imzali
+        name: SIMGiris-v${{ github.run_number }}
         path: SIMGiris.apk
         retention-days: 30
+
+    - name: GitHub Release oluştur
+      uses: ncipollo/release-action@v1
+      with:
+        tag: v${{ github.run_number }}
+        name: "SİM Giriş v${{ github.run_number }}"
+        body: |
+          SİM Giriş APK — otomatik derleme #${{ github.run_number }}
+
+          **Yenilik:** SAİS Sorumlusu Sistem Kurulumu artık uygulama içinde!
+          Her tesisin detay sayfasında "SAİS Sorumlusu Sistem Kurulumu" butonundan erişin.
+
+          **Kurulum:** APK dosyasını indir → aç → Yükle.
+          POCO/Xiaomi: Ayarlar → Güvenlik → Bilinmeyen Kaynaklardan Yükle → İzin ver
+        artifacts: SIMGiris.apk
+        artifactContentType: application/vnd.android.package-archive
+        allowUpdates: true
+        token: ${{ secrets.GITHUB_TOKEN }}

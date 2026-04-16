@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class AndroidBridge {
     private final Context context;
@@ -35,5 +37,24 @@ public class AndroidBridge {
     @JavascriptInterface
     public void toast(String mesaj) {
         Toast.makeText(context, mesaj, Toast.LENGTH_SHORT).show();
+    }
+
+    // GAS bağlantı testi — Java'dan HTTP isteği atar (CORS yok)
+    @JavascriptInterface
+    public String pingGas(String gasUrl) {
+        try {
+            URL url = new URL(gasUrl + "?action=ping");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(10000);
+            conn.setReadTimeout(10000);
+            conn.setInstanceFollowRedirects(true);
+            int code = conn.getResponseCode();
+            conn.disconnect();
+            if (code == 200) return "{\"ok\":true}";
+            return "{\"ok\":false,\"error\":\"HTTP " + code + "\"}";
+        } catch (Exception e) {
+            return "{\"ok\":false,\"error\":\"" + e.getMessage() + "\"}";
+        }
     }
 }
