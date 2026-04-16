@@ -508,6 +508,7 @@ async function baglantiTesti() {
 function saisKurulumAc() {
   if (seciliId) {
     try { window.AndroidNative.setActiveTesis(seciliId); } catch(e) {}
+    // Tarayıcıda localStorage ile tesis bilgisini aktar
     try { localStorage.setItem('activeTesis', seciliId); } catch(e) {}
   }
   if (isApk()) {

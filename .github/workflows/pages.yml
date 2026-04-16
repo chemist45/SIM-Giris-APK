@@ -1,0 +1,52 @@
+name: GitHub Pages Deploy
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'app/src/main/assets/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Kodu indir
+      uses: actions/checkout@v4
+
+    - name: HTML dosyalarını hazırla
+      run: |
+        mkdir -p _site
+        cp app/src/main/assets/sim-giris.html    _site/index.html
+        cp app/src/main/assets/sais-app.html     _site/sais-app.html
+        cp app/src/main/assets/alici-app.html    _site/alici-app.html
+        cp app/src/main/assets/cesme-aat.html    _site/cesme-aat.html
+        cp app/src/main/assets/doganbey-aat.html _site/doganbey-aat.html
+        cp app/src/main/assets/urla-aat.html     _site/urla-aat.html
+        cp app/src/main/assets/ozdere-aat.html   _site/ozdere-aat.html
+        cp app/src/main/assets/seferihisar-aat.html _site/seferihisar-aat.html
+        cp app/src/main/assets/mordogan-aat.html _site/mordogan-aat.html
+        echo "Hazırlanan dosyalar:"
+        ls _site/
+
+    - name: Pages yapılandır
+      uses: actions/configure-pages@v4
+
+    - name: Artifact yükle
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: _site
+
+    - name: Deploy
+      uses: actions/deploy-pages@v4
+      id: deployment
