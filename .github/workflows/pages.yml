@@ -41,6 +41,8 @@ jobs:
 
     - name: Pages yapılandır
       uses: actions/configure-pages@v4
+      with:
+        enablement: true
 
     - name: Artifact yükle
       uses: actions/upload-pages-artifact@v3
