@@ -64,6 +64,7 @@ main{flex:1;padding:16px;max-width:480px;margin:0 auto;width:100%;}
 .plt-apk{background:#04213a;color:#38bdf8;border:1px solid #0c3a5a;}
 /* Bağlantı testi */
 .test-box{background:#020c18;border:1px solid var(--brd);border-radius:10px;padding:13px;margin-bottom:8px;font-size:13px;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;gap:8px;transition:border-color .3s;}
+.btn-apk{background:linear-gradient(135deg,#052e16,#064e24);border:1px solid #22c55e;color:#4ade80;}
 /* Toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#e2e8f0;padding:10px 22px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
 .toast.on{opacity:1;}
@@ -166,9 +167,7 @@ function tesisSeç(id) {
   document.getElementById('badge').innerHTML =
     `<span>${t.i}</span><span style="color:${t.r}">${t.ad}</span>`;
 
-  document.getElementById('testBox').textContent = '—';
-  document.getElementById('testBox').style.borderColor = '';
-  document.getElementById('testBox').style.color = '';
+  // testBox renderPlatform() tarafından her seferinde sıfırdan oluşturulur
 
   // APK modunda aktif tesis kaydet
   if (isApk()) {
@@ -198,10 +197,11 @@ function geri() {
 
 function renderPlatform(id) {
   const el = document.getElementById('platformPanel');
+  let html = '';
 
   if (isApk()) {
-    // APK içi: SMS zaten native alınıyor, ekstra kurulum gerekmez
-    el.innerHTML = `
+    // APK içi: SMS zaten native alınıyor + bağlantı testi
+    html += `
       <div class="card">
         <span class="plt-badge plt-apk">Android Uygulama</span>
         <div class="card-ttl">Otomatik SMS İletimi</div>
@@ -215,15 +215,14 @@ function renderPlatform(id) {
             <div class="adim-txt">Ek kurulum gerekmez.<br><small>Telefonu SİM girişi sırasında açık tutun.</small></div>
           </div>
         </div>
+        <div class="test-box" id="testBox" style="margin-top:12px">—</div>
+        <button class="btn btn-sec" onclick="baglantiTesti()">🔗 Bağlantıyı Test Et</button>
       </div>`;
-    return;
   }
 
-  // iOS + Android her ikisini birden göster
-  el.innerHTML = `
-    <p style="font-size:12px;color:var(--mut);margin-bottom:12px">Cihazınıza uygun seçeneği kullanın:</p>
-
-    <div class="card" style="border-color:#3c3c3e44">
+  // iOS kartı — APK içinde de göster (iPhone kullanan personel için)
+  html += `
+    <div class="card" style="border-color:#3c3c3e44;${isApk() ? 'margin-top:0' : ''}">
       <span class="plt-badge plt-ios">iPhone / iPad — Otomatik Otomasyon</span>
       <div class="card-ttl">iOS Kısayollar ile Otomatik SMS İletimi</div>
       <p style="font-size:12px;color:var(--mut);margin-bottom:12px;line-height:1.6">SMS gelince <b style="color:var(--txt)">otomatik</b> sisteme iletilir — hiçbir şey yapmanıza gerek kalmaz.</p>
@@ -264,8 +263,11 @@ function renderPlatform(id) {
       <button class="btn btn-ios" onclick="iosKisayoluIndir('${id}')" style="margin-top:12px">
         📥 iOS Kısayolunu İndir (.shortcut)
       </button>
-    </div>
+    </div>`;
 
+  if (!isApk()) {
+    // Tarayıcı modunda Android APK indirme kartını da göster
+    html += `
     <div class="card" style="border-color:#22c55e33">
       <span class="plt-badge plt-android">Android</span>
       <div class="card-ttl">SAİS Sorumlusu APK Kurulumu</div>
@@ -276,7 +278,7 @@ function renderPlatform(id) {
         </div>
         <div class="adim">
           <div class="adim-no">2</div>
-          <div class="adim-txt">İndirilen dosyaya dokunun → <b>Yükle</b>.<br><small>POCO/Xiaomi: Ayarlar → Güvenlik → Bilinmeyen Kaynaklardan Yükle → İzin ver.</small></div>
+          <div class="adim-txt">İndirilen dosyaya dokunun → <b>Yükle</b>.<br><small>POCO/Xiaomi: Ayarlar → Güvenlik → Bilinmeyen Kaynaklardan Yükle → Tarayıcı için izin ver.</small></div>
         </div>
         <div class="adim">
           <div class="adim-no">3</div>
@@ -289,6 +291,9 @@ function renderPlatform(id) {
         ⬇️ SAİS Sorumlusu APK İndir
       </a>
     </div>`;
+  }
+
+  el.innerHTML = html;
 }
 
 
