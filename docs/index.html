@@ -9,8 +9,6 @@
 <title>Yarımada SİM Giriş Sistemi</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#020c18;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;display:flex;flex-direction:column;}
@@ -666,129 +664,6 @@ document.getElementById('adminLoginModal').addEventListener('click', function(e)
 document.getElementById('adminTesisModal').addEventListener('click', function(e) {
   if (e.target === this) adminTesisKapat();
 });
-</script>
-
-<script>
-// ═══════════════════════════════════════════════════════
-//  Firebase Web Push Notification
-// ═══════════════════════════════════════════════════════
-(function() {
-  var FIREBASE_CONFIG = {
-    apiKey:            "AIzaSyDcjPa8ipd_WYg0GtAXA_HXl24ExJSQzu8",
-    authDomain:        "sim-giris-yarimada.firebaseapp.com",
-    projectId:         "sim-giris-yarimada",
-    storageBucket:     "sim-giris-yarimada.firebasestorage.app",
-    messagingSenderId: "573899770471",
-    appId:             "1:573899770471:web:f0eef370fe6513c86c22c2"
-  };
-  var VAPID_KEY = "BIifNYv-Du_t_XTrZN7B3JoW8qV6131Pi6RRdb7ConMWYmafIJc-J5pgryqWwTjgvX7SHns5MH5COF39VTFKSns";
-  var GAS_URL   = "https://script.google.com/macros/s/AKfycbwF8vf2dxdhVEuhGDum0wl4KQMkuosUh_qoxOPOXxlRa0LPQhYITLSmg5haTVBDc6_F/exec";
-
-  // APK modunda çalışma
-  if (window.AndroidNative) return;
-
-  // Tarayıcı desteği kontrolü
-  if (!('serviceWorker' in navigator) || !('Notification' in window)) return;
-
-  // iOS: "Ana Ekrana Ekle" sonrası web push çalışır (iOS 16.4+)
-  var isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var isStandalone = window.matchMedia('(display-mode: standalone)').matches
-                  || window.navigator.standalone === true;
-
-  if (isIOS && !isStandalone) {
-    gosterIOSBanner();
-    return;
-  }
-
-  // 7 gün içinde reddedildiyse sorma
-  var reddTarih = localStorage.getItem('pushReddTarih');
-  if (reddTarih && (Date.now() - parseInt(reddTarih)) < 7 * 24 * 3600 * 1000) return;
-
-  // Firebase başlat
-  var app;
-  try { app = firebase.app(); } catch(e) { app = firebase.initializeApp(FIREBASE_CONFIG); }
-  var messaging = firebase.messaging(app);
-
-  // Service Worker kaydet
-  navigator.serviceWorker.register('/firebase-messaging-sw.js').then(function(reg) {
-    if (Notification.permission === 'granted') {
-      var mevcutTesis = localStorage.getItem('activeTesis') || 'genel';
-      tokenAlVeKaydet(messaging, mevcutTesis);
-    } else if (Notification.permission === 'default') {
-      // Tesis seçilince sor
-      document.addEventListener('tesisSecildi', function(e) {
-        isteBildirimIzni(messaging, e.detail.tesisId);
-      }, { once: true });
-      // Tesis zaten seçiliyse hemen sor
-      var mevcutTesis = localStorage.getItem('activeTesis');
-      if (mevcutTesis) isteBildirimIzni(messaging, mevcutTesis);
-    }
-  }).catch(function(err) {
-    console.log('[Push] SW kayıt hatası:', err);
-  });
-
-  function isteBildirimIzni(messaging, tesisId) {
-    Notification.requestPermission().then(function(perm) {
-      if (perm === 'granted') {
-        tokenAlVeKaydet(messaging, tesisId);
-      } else {
-        localStorage.setItem('pushReddTarih', Date.now().toString());
-      }
-    });
-  }
-
-  function tokenAlVeKaydet(messaging, tesisId) {
-    messaging.getToken({ vapidKey: VAPID_KEY }).then(function(token) {
-      if (!token) return;
-      fetch(GAS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'saveFcmToken', token: token, tesisId: tesisId })
-      }).then(function(r) { return r.json(); })
-        .then(function(d) { console.log('[Push] Token kaydedildi:', d); })
-        .catch(function(err) { console.log('[Push] Token kayıt hatası:', err); });
-
-      // Ön planda bildirim
-      messaging.onMessage(function(payload) {
-        var title = (payload.notification && payload.notification.title) || 'Yarımada SİM Giriş';
-        var body  = (payload.notification && payload.notification.body)  || '';
-        if (Notification.permission === 'granted') {
-          new Notification(title, { body: body, icon: '/icons/icon-192.png' });
-        }
-      });
-    }).catch(function(err) { console.log('[Push] Token hatası:', err); });
-  }
-
-  // Tesis değişince token güncelle
-  document.addEventListener('tesisSecildi', function(e) {
-    if (Notification.permission === 'granted') tokenAlVeKaydet(messaging, e.detail.tesisId);
-  });
-})();
-
-// iOS "Ana Ekrana Ekle" Banner
-function gosterIOSBanner() {
-  if (document.getElementById('ios-push-banner')) return;
-  if (localStorage.getItem('iosBannerKapat')) return;
-  var banner = document.createElement('div');
-  banner.id = 'ios-push-banner';
-  banner.innerHTML =
-    '<div style="position:fixed;bottom:0;left:0;right:0;z-index:9999;' +
-    'background:linear-gradient(135deg,#041428,#062040);border-top:2px solid #0ea5e9;' +
-    'padding:16px 20px;display:flex;align-items:flex-start;gap:12px;' +
-    'font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;">' +
-      '<div style="font-size:28px;flex-shrink:0;">📲</div>' +
-      '<div style="flex:1;">' +
-        '<div style="font-weight:700;color:#fff;font-size:14px;margin-bottom:4px;">Bildirim almak için Ana Ekrana Ekle</div>' +
-        '<div style="color:#94a3b8;font-size:13px;line-height:1.5;">' +
-          'Ekranın altındaki <strong style="color:#0ea5e9;">Paylaş</strong> butonuna → ' +
-          '<strong style="color:#fff;">Ana Ekrana Ekle</strong>' +
-        '</div>' +
-      '</div>' +
-      '<button onclick="localStorage.setItem(\'iosBannerKapat\',\'1\');document.getElementById(\'ios-push-banner\').remove();" ' +
-      'style="background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;padding:0;">✕</button>' +
-    '</div>';
-  document.body.appendChild(banner);
-}
 </script>
 </body>
 </html>
