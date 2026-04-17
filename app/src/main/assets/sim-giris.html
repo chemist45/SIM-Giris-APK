@@ -141,6 +141,30 @@ body{background:#020c18;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
 /* Footer */
 footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-top:1px solid #1e3a5f;margin-top:auto;}
 
+/* SİM Iframe Sayfa (Sayfa 3) */
+#p3{display:none;padding:0;max-width:none;margin:0;height:100dvh;width:100%;flex-direction:column;background:#020c18;position:fixed;inset:0;z-index:500;}
+#p3.on{display:flex;}
+.sim-topbar{flex-shrink:0;background:linear-gradient(135deg,#041428 0%,#062040 100%);border-bottom:2px solid #0ea5e9;padding:8px 10px;display:flex;align-items:stretch;gap:6px;min-height:68px;}
+.sim-slot{flex:1;background:#020c18;border:1px solid #1e3a5f;border-radius:8px;padding:6px 8px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;min-width:0;transition:border-color .15s,background .15s;}
+.sim-slot:active{background:#061c30;border-color:#0ea5e9;}
+.sim-slot-lbl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:4px;}
+.sim-slot-val{font-size:13px;font-weight:700;font-family:monospace;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sim-slot.kod .sim-slot-val{font-size:18px;letter-spacing:3px;color:#94a3b8;}
+.sim-slot.kod.yesil{border-color:#22c55e;background:#0a1f12;}
+.sim-slot.kod.yesil .sim-slot-val{color:#22c55e;}
+.sim-slot.kod.sari{border-color:#f59e0b;background:#1c1200;}
+.sim-slot.kod.sari .sim-slot-val{color:#f59e0b;}
+.sim-slot.kod.krmz{border-color:#ef4444;background:#1f0a0a;}
+.sim-slot.kod.krmz .sim-slot-val{color:#ef4444;}
+.sim-close{flex-shrink:0;width:44px;background:#041428;border:1px solid #1e3a5f;border-radius:8px;color:#94a3b8;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sim-close:active{background:#1f0a0a;border-color:#ef4444;color:#ef4444;}
+.sim-iframe-wrap{flex:1;position:relative;background:#fff;overflow:hidden;}
+.sim-iframe{width:100%;height:100%;border:none;display:block;}
+.sim-iframe-hata{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#020c18;color:#e2e8f0;padding:24px;text-align:center;}
+.sim-iframe-hata.on{display:flex;}
+.sim-iframe-hata .ikon{font-size:44px;}
+.sim-iframe-hata .mesaj{font-size:14px;line-height:1.6;color:#94a3b8;max-width:320px;}
+
 /* Toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#e2e8f0;padding:10px 22px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
 .toast.on{opacity:1;}
@@ -221,6 +245,33 @@ footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-t
   </button>
   <div class="sais-panel" id="saisPanel">
     <div id="saisIcerik"></div>
+  </div>
+</div>
+
+<!-- ══ SAYFA 3 — SİM + Üst Şerit (APK) ══ -->
+<div class="page" id="p3">
+  <div class="sim-topbar">
+    <div class="sim-slot" onclick="simBarKopya('k')">
+      <div class="sim-slot-lbl">👤 Kullanıcı 📋</div>
+      <div class="sim-slot-val" id="simBarKul">—</div>
+    </div>
+    <div class="sim-slot" onclick="simBarKopya('s')">
+      <div class="sim-slot-lbl">🔑 Şifre 📋</div>
+      <div class="sim-slot-val" id="simBarSif">—</div>
+    </div>
+    <div class="sim-slot kod" id="simBarKodSlot" onclick="simBarKopya('kod')">
+      <div class="sim-slot-lbl">🔢 Kod 📋</div>
+      <div class="sim-slot-val" id="simBarKod">⏳ ---</div>
+    </div>
+    <button class="sim-close" onclick="simPageKapat()" title="Kapat">✕</button>
+  </div>
+  <div class="sim-iframe-wrap">
+    <iframe class="sim-iframe" id="simIframe" src="about:blank" referrerpolicy="no-referrer"></iframe>
+    <div class="sim-iframe-hata" id="simIframeHata">
+      <div class="ikon">🚫</div>
+      <div class="mesaj">SİM sitesi bu cihazda çerçeve içinde açılamıyor. <strong>Dış tarayıcıda</strong> açmayı deneyin.</div>
+      <button class="btn btn-sim" onclick="simDisTarayici()" style="max-width:280px">🌐 Dış Tarayıcıda Aç</button>
+    </div>
   </div>
 </div>
 
@@ -355,12 +406,70 @@ function sayfaGeri() {
 async function simGiris() {
   if (!seciliId) return;
   try { await navigator.clipboard.writeText(TESISLER[seciliId].s); } catch(e){}
-  window.open('https://sim.csb.gov.tr', '_blank');
   document.getElementById('kodPanel').style.display = 'block';
-  toast('Şifre kopyalandı — SİM açılıyor');
+
+  if (isApk()) {
+    simPageAc(seciliId);
+    toast('Şifre kopyalandı — üst şeritten kullanabilirsin');
+  } else {
+    window.open('https://sim.csb.gov.tr', '_blank');
+    toast('Şifre kopyalandı — SİM açılıyor');
+  }
+
   await kodGetir();
   stopPoll();
   kodPoll = setInterval(kodGetir, 15000);
+}
+
+/* ── SİM Sayfa 3 (iframe + üst şerit, APK) ─────────────── */
+function simPageAc(id) {
+  const t = TESISLER[id];
+  document.getElementById('simBarKul').textContent = t.k;
+  document.getElementById('simBarSif').textContent = t.s;
+  document.getElementById('simBarKod').textContent = '⏳ ---';
+  document.getElementById('simBarKodSlot').className = 'sim-slot kod';
+  document.getElementById('simIframeHata').classList.remove('on');
+  document.getElementById('simIframe').src = 'https://sim.csb.gov.tr';
+  document.getElementById('p3').classList.add('on');
+}
+
+function simPageKapat() {
+  document.getElementById('p3').classList.remove('on');
+  document.getElementById('simIframe').src = 'about:blank';
+}
+
+function simBarKopya(tip) {
+  if (!seciliId) return;
+  const t = TESISLER[seciliId];
+  let v, lbl;
+  if (tip === 'k')   { v = t.k; lbl = 'Kullanıcı adı'; }
+  else if (tip === 's') { v = t.s; lbl = 'Şifre'; }
+  else {
+    v = document.getElementById('simBarKod').textContent.replace(/\D/g,'');
+    if (!v) { toast('Kod henüz gelmedi'); return; }
+    lbl = 'Kod';
+  }
+  const fb = () => {
+    const ta = document.createElement('textarea');
+    ta.value=v; ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    toast(lbl+' kopyalandı');
+  };
+  if (navigator.clipboard) navigator.clipboard.writeText(v).then(()=>toast(lbl+' kopyalandı')).catch(fb);
+  else fb();
+}
+
+function simBarKodGuncelle(kod, cls) {
+  const slot = document.getElementById('simBarKodSlot');
+  const val  = document.getElementById('simBarKod');
+  if (!kod) { val.textContent = '⏳ ---'; slot.className = 'sim-slot kod'; return; }
+  val.textContent = kod;
+  slot.className = 'sim-slot kod ' + (cls || '');
+}
+
+function simDisTarayici() {
+  window.open('https://sim.csb.gov.tr', '_blank');
 }
 
 /* ── Kod getir ─────────────────────────────────────────── */
@@ -381,10 +490,13 @@ async function kodGetir() {
       const kod = m ? m[0] : d.body;
       el.className = cls;
       el.innerHTML = `<div class="kod-box"><div class="kod-num">${kod}</div><div class="kod-yas">${dk>0?dk+' dk ':''}${sn} sn önce geldi</div></div>`;
+      simBarKodGuncelle(kod, cls);
     } else if (d.expired) {
       el.className=''; el.innerHTML='<div class="kod-bos">🔴 Kodun süresi doldu — yeniden giriş yapın</div>';
+      simBarKodGuncelle(null);
     } else {
       el.className=''; el.innerHTML='<div class="kod-bos">⏳ Henüz kod gelmedi<br><small>SAİS sorumlusunun telefonu aktif mi?</small></div>';
+      simBarKodGuncelle(null);
     }
   } catch(e) {
     el.className=''; el.innerHTML='<div class="kod-bos">❌ Bağlantı hatası — internet kontrol edin</div>';
@@ -414,10 +526,7 @@ function renderSaisPanel(id) {
           <div class="b-alt">${t.ad} için 2FA SMS'ler arka planda sisteme iletiliyor</div>
         </div>
       </div>
-      <button onclick="saisKurulumAc()" class="btn btn-sim" style="margin-top:10px">
-        📱 SAİS Sorumlusu Sistem Kurulumu
-      </button>
-      <p style="font-size:12px;color:#64748b;line-height:1.6;margin-top:6px">Bağlantı testi yapabilir, iPhone/iPad kurulum rehberini görebilirsiniz.</p>`;
+      <p style="font-size:12px;color:#64748b;line-height:1.6">Uygulama yüklü olduğu sürece ekstra kurulum gerekmez.</p>`;
     return;
   }
 
@@ -501,19 +610,6 @@ async function baglantiTesti() {
     box.style.color = '#ef4444';
     box.style.borderColor = '#ef444433';
     box.textContent = '❌ Bağlantı kurulamadı — internet kontrol edin';
-  }
-}
-
-/* ── SAİS Kurulum Ekranı Aç ────────────────────────────── */
-function saisKurulumAc() {
-  if (seciliId) {
-    try { window.AndroidNative.setActiveTesis(seciliId); } catch(e) {}
-    try { localStorage.setItem('activeTesis', seciliId); } catch(e) {}
-  }
-  if (isApk()) {
-    window.location.href = 'file:///android_asset/sais-app.html';
-  } else {
-    window.location.href = 'sais-app.html';
   }
 }
 
@@ -613,7 +709,7 @@ async function adminGiris() {
   const hata = document.getElementById('adminHata');
   hata.textContent = '';
   if (!user || !pass) { hata.textContent = 'Kullanıcı adı ve şifre gerekli'; return; }
-  if (user.toLowerCase() !== ADMIN_USER.toLowerCase()) { hata.textContent = 'Kullanıcı adı hatalı'; return; }
+  if (user !== ADMIN_USER) { hata.textContent = 'Kullanıcı adı hatalı'; return; }
   try {
     const hash = await sha256(pass);
     if (hash !== ADMIN_HASH) { hata.textContent = 'Şifre hatalı'; return; }
