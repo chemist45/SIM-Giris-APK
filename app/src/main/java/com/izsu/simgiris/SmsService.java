@@ -24,16 +24,27 @@ public class SmsService extends Service {
     public void onCreate() {
         super.onCreate();
         bildirimKanaliOlustur();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startForeground(BILDIRIM_ID, bildirimOlustur(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
-        } else {
-            startForeground(BILDIRIM_ID, bildirimOlustur());
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                // Android 14+ : dataSync artık 6-saatlik limit getiriyor.
+                // SMS OTP forward özel kullanım — specialUse tipi sınırsız.
+                startForeground(BILDIRIM_ID, bildirimOlustur(),
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(BILDIRIM_ID, bildirimOlustur(),
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+            } else {
+                startForeground(BILDIRIM_ID, bildirimOlustur());
+            }
+        } catch (Exception e) {
+            // Android 12+ ForegroundServiceStartNotAllowedException yakalanırsa servis yine de yaşamaya devam eder
+            android.util.Log.e("SmsService", "startForeground hata: " + e.getMessage());
         }
 
-        // Telefon uyku moduna geçse bile servis çalışmaya devam eder
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         if (pm != null) {
             wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SimGiris:SmsWakeLock");
+            wakeLock.setReferenceCounted(false);
             wakeLock.acquire();
         }
     }

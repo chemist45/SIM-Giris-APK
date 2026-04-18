@@ -164,6 +164,13 @@ footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-t
 .sim-iframe-hata.on{display:flex;}
 .sim-iframe-hata .ikon{font-size:44px;}
 .sim-iframe-hata .mesaj{font-size:14px;line-height:1.6;color:#94a3b8;max-width:320px;}
+.sim-web-info{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#020c18;color:#e2e8f0;padding:24px;text-align:center;}
+.sim-web-info.on{display:flex;}
+.sim-web-info .ikon{font-size:52px;}
+.sim-web-info .ttl{font-size:17px;font-weight:700;color:#0ea5e9;}
+.sim-web-info .mesaj{font-size:14px;line-height:1.6;color:#94a3b8;max-width:360px;}
+.sim-web-info .pano-durum{font-size:13px;color:#22c55e;background:#0a1f12;border:1px solid #22c55e;border-radius:8px;padding:10px 16px;max-width:340px;}
+.sim-web-info .pano-durum.bekle{color:#94a3b8;background:#020c18;border-color:#1e3a5f;}
 
 /* Toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#e2e8f0;padding:10px 22px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
@@ -271,6 +278,13 @@ footer{text-align:center;font-size:11px;color:#334155;padding:18px 16px;border-t
       <div class="ikon">🚫</div>
       <div class="mesaj">SİM sitesi bu cihazda çerçeve içinde açılamıyor. <strong>Dış tarayıcıda</strong> açmayı deneyin.</div>
       <button class="btn btn-sim" onclick="simDisTarayici()" style="max-width:280px">🌐 Dış Tarayıcıda Aç</button>
+    </div>
+    <div class="sim-web-info" id="simWebInfo">
+      <div class="ikon">🌐</div>
+      <div class="ttl">SİM yeni sekmede açıldı</div>
+      <div class="mesaj">SİM sitesi tarayıcınızın <strong>yeni bir sekmesinde</strong> açıldı. Kullanıcı adı ve şifre için yukarıdaki şeritten <strong>📋 kopyala</strong> butonlarını kullanabilirsiniz.</div>
+      <div class="pano-durum bekle" id="simPanoDurum">⏳ Kod geldiğinde otomatik olarak <strong>panoya kopyalanacak</strong> — SİM sekmesinde <strong>uzun bas → Yapıştır</strong> (veya Ctrl+V).</div>
+      <button class="btn btn-sim" onclick="simDisTarayici()" style="max-width:280px">🌐 SİM Sekmesini Yeniden Aç</button>
     </div>
   </div>
 </div>
@@ -408,12 +422,12 @@ async function simGiris() {
   try { await navigator.clipboard.writeText(TESISLER[seciliId].s); } catch(e){}
   document.getElementById('kodPanel').style.display = 'block';
 
+  simPageAc(seciliId);
   if (isApk()) {
-    simPageAc(seciliId);
     toast('Şifre kopyalandı — üst şeritten kullanabilirsin');
   } else {
     window.open('https://sim.csb.gov.tr', '_blank');
-    toast('Şifre kopyalandı — SİM açılıyor');
+    toast('Şifre kopyalandı — SİM yeni sekmede açıldı');
   }
 
   await kodGetir();
@@ -421,21 +435,42 @@ async function simGiris() {
   kodPoll = setInterval(kodGetir, 15000);
 }
 
-/* ── SİM Sayfa 3 (iframe + üst şerit, APK) ─────────────── */
+/* ── SİM Sayfa 3 (iframe APK / web-info Web) ───────────── */
 function simPageAc(id) {
   const t = TESISLER[id];
   document.getElementById('simBarKul').textContent = t.k;
   document.getElementById('simBarSif').textContent = t.s;
   document.getElementById('simBarKod').textContent = '⏳ ---';
   document.getElementById('simBarKodSlot').className = 'sim-slot kod';
-  document.getElementById('simIframeHata').classList.remove('on');
-  document.getElementById('simIframe').src = 'https://sim.csb.gov.tr';
+  sonPanoKod = null;
+
+  const iframe   = document.getElementById('simIframe');
+  const iframeEl = iframe;
+  const hata     = document.getElementById('simIframeHata');
+  const webInfo  = document.getElementById('simWebInfo');
+  const panoDur  = document.getElementById('simPanoDurum');
+
+  if (isApk()) {
+    hata.classList.remove('on');
+    webInfo.classList.remove('on');
+    iframeEl.style.display = 'block';
+    iframeEl.src = 'https://sim.csb.gov.tr';
+  } else {
+    iframeEl.style.display = 'none';
+    iframeEl.src = 'about:blank';
+    hata.classList.remove('on');
+    webInfo.classList.add('on');
+    panoDur.classList.add('bekle');
+    panoDur.innerHTML = '⏳ Kod geldiğinde otomatik olarak <strong>panoya kopyalanacak</strong> — SİM sekmesinde <strong>uzun bas → Yapıştır</strong> (veya Ctrl+V).';
+  }
   document.getElementById('p3').classList.add('on');
 }
 
 function simPageKapat() {
   document.getElementById('p3').classList.remove('on');
   document.getElementById('simIframe').src = 'about:blank';
+  document.getElementById('simWebInfo').classList.remove('on');
+  sonPanoKod = null;
 }
 
 function simBarKopya(tip) {
@@ -460,12 +495,44 @@ function simBarKopya(tip) {
   else fb();
 }
 
+let sonPanoKod = null;
 function simBarKodGuncelle(kod, cls) {
   const slot = document.getElementById('simBarKodSlot');
   const val  = document.getElementById('simBarKod');
-  if (!kod) { val.textContent = '⏳ ---'; slot.className = 'sim-slot kod'; return; }
+  if (!kod) {
+    val.textContent = '⏳ ---';
+    slot.className = 'sim-slot kod';
+    sonPanoKod = null;
+    return;
+  }
   val.textContent = kod;
   slot.className = 'sim-slot kod ' + (cls || '');
+
+  // Web modunda p3 açıkken yeni kod gelince otomatik panoya kopyala
+  const p3Acik = document.getElementById('p3').classList.contains('on');
+  if (!isApk() && p3Acik && kod !== sonPanoKod) {
+    sonPanoKod = kod;
+    const panoDur = document.getElementById('simPanoDurum');
+    const yaz = () => {
+      if (panoDur) {
+        panoDur.classList.remove('bekle');
+        panoDur.innerHTML = '✅ <strong>' + kod + '</strong> panoya kopyalandı — SİM sekmesinde <strong>uzun bas → Yapıştır</strong>';
+      }
+      toast('📋 Kod panoya kopyalandı');
+    };
+    const fb = () => {
+      const ta = document.createElement('textarea');
+      ta.value = kod; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); yaz(); } catch(e){}
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(kod).then(yaz).catch(fb);
+    } else {
+      fb();
+    }
+  }
 }
 
 function simDisTarayici() {

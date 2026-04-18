@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SmsReceiver extends BroadcastReceiver {
     private static final String TAG = "SmsReceiver";
@@ -28,44 +29,56 @@ public class SmsReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Bundle bundle = intent.getExtras();
-        if (bundle == null) return;
+        // Android 14+'ta SMS broadcast'ı işleme süresi kısıtlı (10s ANR).
+        // goAsync ile receiver'ın yaşam süresini HTTP çağrıları bitene kadar uzat.
+        final PendingResult pending = goAsync();
 
-        Object[] pdus = (Object[]) bundle.get("pdus");
-        if (pdus == null) return;
+        try {
+            Bundle bundle = intent.getExtras();
+            if (bundle == null) { pending.finish(); return; }
 
-        String format = bundle.getString("format");
+            Object[] pdus = (Object[]) bundle.get("pdus");
+            if (pdus == null) { pending.finish(); return; }
 
-        StringBuilder tamMesaj = new StringBuilder();
-        String gonderen = "";
+            String format = bundle.getString("format");
+            StringBuilder tamMesaj = new StringBuilder();
+            String gonderen = "";
 
-        for (Object pdu : pdus) {
-            SmsMessage msg;
-            if (format != null) {
-                msg = SmsMessage.createFromPdu((byte[]) pdu, format);
-            } else {
-                msg = SmsMessage.createFromPdu((byte[]) pdu);
+            for (Object pdu : pdus) {
+                SmsMessage msg;
+                if (format != null) {
+                    msg = SmsMessage.createFromPdu((byte[]) pdu, format);
+                } else {
+                    msg = SmsMessage.createFromPdu((byte[]) pdu);
+                }
+                if (msg == null) continue;
+                tamMesaj.append(msg.getMessageBody());
+                gonderen = msg.getOriginatingAddress();
             }
-            tamMesaj.append(msg.getMessageBody());
-            gonderen = msg.getOriginatingAddress();
+
+            final String icerik = tamMesaj.toString();
+            final String gonderenFinal = gonderen != null ? gonderen : "";
+            Log.d(TAG, "SMS alındı | Gönderen: " + gonderenFinal + " | İçerik: " + icerik);
+
+            SharedPreferences prefs = context.getSharedPreferences(AndroidBridge.PREFS, Context.MODE_PRIVATE);
+            final String aktivTesis = prefs.getString("activeTesis", "");
+
+            // Her iki ağ çağrısı da bitince pending.finish() çağrılır.
+            final AtomicInteger kalan = new AtomicInteger(2);
+            final Runnable bitir = () -> { if (kalan.decrementAndGet() == 0) pending.finish(); };
+
+            gasaGonder(icerik, gonderenFinal, aktivTesis, bitir);
+            rtdbYaz(icerik, gonderenFinal, aktivTesis, bitir);
+
+        } catch (Throwable t) {
+            Log.e(TAG, "onReceive hata: " + t.getMessage());
+            pending.finish();
         }
-
-        String icerik = tamMesaj.toString();
-        String gonderenFinal = gonderen != null ? gonderen : "";
-        Log.d(TAG, "SMS alındı | Gönderen: " + gonderenFinal + " | İçerik: " + icerik);
-
-        SharedPreferences prefs = context.getSharedPreferences(AndroidBridge.PREFS, Context.MODE_PRIVATE);
-        String aktivTesis = prefs.getString("activeTesis", "");
-
-        // GAS'a ilet (mevcut davranış korunuyor)
-        gasaGonder(context, icerik, gonderenFinal, aktivTesis);
-
-        // Firebase RTDB'ye log yaz
-        rtdbYaz(icerik, gonderenFinal, aktivTesis);
     }
 
-    private void gasaGonder(Context context, String icerik, String gonderen, String aktivTesis) {
+    private void gasaGonder(String icerik, String gonderen, String aktivTesis, Runnable done) {
         new Thread(() -> {
+            HttpURLConnection conn = null;
             try {
                 JSONObject json = new JSONObject();
                 json.put("action", "smsWebhook");
@@ -74,7 +87,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 json.put("tesis", aktivTesis);
 
                 URL url = new URL(GAS_URL);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setDoOutput(true);
@@ -89,16 +102,19 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 int yanit = conn.getResponseCode();
                 Log.d(TAG, "GAS yanıtı: " + yanit + " | Tesis: " + aktivTesis);
-                conn.disconnect();
 
             } catch (Exception e) {
                 Log.e(TAG, "GAS iletme hatası: " + e.getMessage());
+            } finally {
+                if (conn != null) conn.disconnect();
+                done.run();
             }
         }).start();
     }
 
-    private void rtdbYaz(String icerik, String gonderen, String tesisId) {
+    private void rtdbYaz(String icerik, String gonderen, String tesisId, Runnable done) {
         new Thread(() -> {
+            HttpURLConnection conn = null;
             try {
                 JSONObject json = new JSONObject();
                 json.put("tesis",     tesisId);
@@ -107,7 +123,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 json.put("timestamp", System.currentTimeMillis());
 
                 URL url = new URL(RTDB_URL);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setDoOutput(true);
@@ -121,10 +137,12 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 int yanit = conn.getResponseCode();
                 Log.d(TAG, "RTDB yanıtı: " + yanit);
-                conn.disconnect();
 
             } catch (Exception e) {
                 Log.e(TAG, "RTDB yazma hatası: " + e.getMessage());
+            } finally {
+                if (conn != null) conn.disconnect();
+                done.run();
             }
         }).start();
     }

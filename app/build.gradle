@@ -2,6 +2,16 @@ plugins {
     id 'com.android.application'
 }
 
+/**
+ * versionCode stratejisi:
+ *  - CI'dan gelen buildVersionCode varsa onu kullan (GitHub Actions).
+ *  - Yoksa timestamp-tabanlı üret — her yerel build benzersiz, aynı/düşük
+ *    versionCode hatası ("Uygulama kurulamadı / INSTALL_FAILED_VERSION_DOWNGRADE")
+ *    oluşmaz.
+ */
+def autoVersionCode = ((long)(System.currentTimeMillis() / 60000L)) - 29000000L
+if (autoVersionCode < 1L) autoVersionCode = 1L
+
 android {
     namespace 'com.izsu.simgiris'
     compileSdk 35
@@ -10,12 +20,17 @@ android {
         applicationId "com.izsu.simgiris"
         minSdk 21
         targetSdk 35
-        versionCode project.hasProperty('buildVersionCode') ? project.property('buildVersionCode').toInteger() : 1
-        versionName "1.0"
+        versionCode project.hasProperty('buildVersionCode')
+            ? project.property('buildVersionCode').toInteger()
+            : autoVersionCode.intValue()
+        versionName "1.1"
     }
 
     buildTypes {
         release {
+            // CI (build.yml) `app-release-unsigned.apk`'yi `simgiris-release.p12`
+            // ile apksigner üstünden imzalıyor — buraya signingConfig eklemeyin,
+            // CI pipeline bozulur.
             minifyEnabled false
         }
         debug {
@@ -26,6 +41,12 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE*', 'META-INF/NOTICE*']
+        }
     }
 }
 
