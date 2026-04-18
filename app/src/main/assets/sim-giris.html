@@ -583,9 +583,10 @@ function renderSaisPanel(id) {
   const el = document.getElementById('saisIcerik');
   const t = TESISLER[id];
 
-  if (isApk()) {
-    el.innerHTML = `
-      <span class="plt plt-apk">Android Uygulama</span>
+  // APK'da çalışıyorsa üstte "Bu cihaz kurulu" banner'ı + ayraç,
+  // ardından diğer cihazlar için iOS + Android talimatları gelir.
+  const ustBlok = isApk() ? `
+      <span class="plt plt-apk">Bu Cihaz — Android APK</span>
       <div class="banner banner-apk">
         <div class="b-dot b-dot-apk"></div>
         <div>
@@ -593,14 +594,15 @@ function renderSaisPanel(id) {
           <div class="b-alt">${t.ad} için 2FA SMS'ler arka planda sisteme iletiliyor</div>
         </div>
       </div>
-      <p style="font-size:12px;color:#64748b;line-height:1.6">Uygulama yüklü olduğu sürece ekstra kurulum gerekmez.</p>`;
-    return;
-  }
+      <p style="font-size:12px;color:#64748b;line-height:1.6;margin-bottom:14px">Bu uygulama yüklü olduğu sürece ekstra kurulum gerekmez.</p>
+      <div style="border-top:1px solid #1e3a5f;margin:6px 0 14px;padding-top:14px">
+        <div style="font-size:13px;color:#94a3b8;font-weight:700;margin-bottom:4px">📱 Başka Cihazlara Kurulum</div>
+        <p style="font-size:12px;color:#64748b;margin-bottom:10px">Diğer tesisler veya yedek cihazlar (iPhone / Android) için:</p>
+      </div>
+    ` : `<p style="font-size:12px;color:#64748b;margin-bottom:14px">Cihazınıza uygun seçeneği kullanın:</p>`;
 
   // iOS + Android her ikisini birden göster
-  el.innerHTML = `
-    <p style="font-size:12px;color:#64748b;margin-bottom:14px">Cihazınıza uygun seçeneği kullanın:</p>
-
+  el.innerHTML = ustBlok + `
     <div style="background:#0d1f2f;border:1px solid #1c3a5f;border-radius:12px;padding:14px;margin-bottom:12px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
         <span style="font-size:18px"></span>
