@@ -45,7 +45,8 @@ public class SmsService extends Service {
         if (pm != null) {
             wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SimGiris:SmsWakeLock");
             wakeLock.setReferenceCounted(false);
-            wakeLock.acquire();
+            // Android 16: zaman aşımı zorunlu — 24 saatte bir servis yeniden başlar (START_STICKY)
+            wakeLock.acquire(24 * 60 * 60 * 1000L);
         }
     }
 

@@ -12,6 +12,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -42,6 +43,24 @@ public class MainActivity extends AppCompatActivity {
         webView = findViewById(R.id.webView);
         webViewAyarla();
         webView.loadUrl("file:///android_asset/sim-giris.html");
+
+        // Android 13+ predictive back gesture & Android 16 uyumu
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (webView == null) { setEnabled(false); getOnBackPressedDispatcher().onBackPressed(); return; }
+                webView.evaluateJavascript(
+                    "(function(){var p=document.getElementById('p3');" +
+                    "if(p&&p.classList.contains('on')){simPageKapat();return true;}return false;})()",
+                    result -> {
+                        if (!"true".equals(result)) {
+                            if (webView.canGoBack()) webView.goBack();
+                            else { setEnabled(false); getOnBackPressedDispatcher().onBackPressed(); }
+                        }
+                    }
+                );
+            }
+        });
     }
 
     private void webViewAyarla() {
@@ -239,23 +258,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (webView == null) { super.onBackPressed(); return; }
-        // p3 (SİM iframe sayfası) açıksa önce onu kapat
-        webView.evaluateJavascript(
-            "(function(){var p=document.getElementById('p3');" +
-            "if(p && p.classList.contains('on')){simPageKapat();return true;}return false;})()",
-            result -> {
-                if (!"true".equals(result)) {
-                    if (webView.canGoBack()) webView.goBack();
-                    else geriDefault();
-                }
-            }
-        );
-    }
-
-    private void geriDefault() {
-        super.onBackPressed();
-    }
 }

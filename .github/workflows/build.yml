@@ -15,17 +15,17 @@ jobs:
     - name: Kodu indir
       uses: actions/checkout@v4
 
-    - name: Java 17 kur
+    - name: Java 21 kur
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
 
     - name: Gradle kur ve Wrapper oluştur
       run: |
-        wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip -O gradle.zip
+        wget -q https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -O gradle.zip
         unzip -q gradle.zip
-        ./gradle-8.7/bin/gradle wrapper --gradle-version 8.7
+        ./gradle-8.11.1/bin/gradle wrapper --gradle-version 8.11.1
         chmod +x gradlew
 
     - name: Gradle önbelleği
@@ -71,11 +71,10 @@ jobs:
         body: |
           SİM Giriş APK — otomatik derleme #${{ github.run_number }}
 
-          **Yenilik:** SAİS Sorumlusu Sistem Kurulumu artık uygulama içinde!
-          Her tesisin detay sayfasında "SAİS Sorumlusu Sistem Kurulumu" butonundan erişin.
+          **v1.3:** Android 16 (One UI 8.0) ve tüm Android sürümleri (5.0+) ile tam uyumlu.
 
           **Kurulum:** APK dosyasını indir → aç → Yükle.
-          POCO/Xiaomi: Ayarlar → Güvenlik → Bilinmeyen Kaynaklardan Yükle → İzin ver
+          POCO/Xiaomi/Samsung: Ayarlar → Güvenlik → Bilinmeyen Kaynaklardan Yükle → İzin ver
         artifacts: SIMGiris.apk
         artifactContentType: application/vnd.android.package-archive
         allowUpdates: true
