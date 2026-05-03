@@ -655,11 +655,17 @@ async function kodGetir() {
   if (!seciliId) return;
   const el = document.getElementById('kodIcerik');
   try {
-    const res = await fetch(GAS_URL, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({action:'getCode', tesis:seciliId})
-    });
-    const d = await res.json();
+    const payload = JSON.stringify({action:'getCode', tesis:seciliId});
+    let d;
+    if (isApk()) {
+      // APK: file:// CORS sorununu aşmak için Java köprüsü kullan
+      d = JSON.parse(window.AndroidNative.gasPost(GAS_URL, payload));
+    } else {
+      const res = await fetch(GAS_URL, {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: payload
+      });
+      d = await res.json();
+    }
     document.getElementById('sonGun').textContent = 'Son güncelleme: ' + new Date().toLocaleTimeString('tr-TR');
     if (d.ok) {
       const dk = Math.floor(d.ageSec/60), sn = d.ageSec%60;

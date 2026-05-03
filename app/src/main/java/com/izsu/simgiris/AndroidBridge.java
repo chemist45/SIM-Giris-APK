@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class AndroidBridge {
     private final Context context;
@@ -55,6 +59,41 @@ public class AndroidBridge {
             return "{\"ok\":false,\"error\":\"HTTP " + code + "\"}";
         } catch (Exception e) {
             return "{\"ok\":false,\"error\":\"" + e.getMessage() + "\"}";
+        }
+    }
+
+    // GAS'a POST isteği atar ve yanıtı döner — file:// CORS sorununu aşar
+    @JavascriptInterface
+    public String gasPost(String gasUrl, String body) {
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL(gasUrl);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoOutput(true);
+            conn.setConnectTimeout(15000);
+            conn.setReadTimeout(20000);
+            conn.setInstanceFollowRedirects(true);
+
+            byte[] data = body.getBytes(StandardCharsets.UTF_8);
+            try (OutputStream os = conn.getOutputStream()) { os.write(data); }
+
+            int code = conn.getResponseCode();
+            java.io.InputStream is = (code >= 200 && code < 400)
+                ? conn.getInputStream() : conn.getErrorStream();
+            if (is == null) return "{\"ok\":false,\"error\":\"bos yanit\"}";
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) sb.append(line);
+            reader.close();
+            return sb.toString();
+        } catch (Exception e) {
+            return "{\"ok\":false,\"error\":\"" + e.getMessage() + "\"}";
+        } finally {
+            if (conn != null) conn.disconnect();
         }
     }
 }
