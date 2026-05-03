@@ -23,9 +23,9 @@ jobs:
 
     - name: Gradle kur ve Wrapper oluştur
       run: |
-        wget -q https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -O gradle.zip
+        wget -q https://services.gradle.org/distributions/gradle-8.10.2-bin.zip -O gradle.zip
         unzip -q gradle.zip
-        ./gradle-8.11.1/bin/gradle wrapper --gradle-version 8.11.1
+        ./gradle-8.10.2/bin/gradle wrapper --gradle-version 8.10.2
         chmod +x gradlew
 
     - name: Gradle önbelleği

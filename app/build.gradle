@@ -14,12 +14,12 @@ if (autoVersionCode < 1L) autoVersionCode = 1L
 
 android {
     namespace 'com.izsu.simgiris'
-    compileSdk 36
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.izsu.simgiris"
         minSdk 21
-        targetSdk 36
+        targetSdk 35
         versionCode project.hasProperty('buildVersionCode')
             ? project.property('buildVersionCode').toInteger()
             : autoVersionCode.intValue()
