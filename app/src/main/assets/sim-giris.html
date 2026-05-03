@@ -737,7 +737,7 @@ function renderSaisPanel(id) {
         📥 iOS Kısayolunu İndir (.shortcut)
       </button>
     </div>
-
+    ` + (!isApk() ? `
     <div style="background:#0a1f12;border:1px solid #1a3a24;border-radius:12px;padding:14px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
         <span style="font-size:18px">🤖</span>
@@ -751,7 +751,7 @@ function renderSaisPanel(id) {
       <div id="saisTestBox" style="background:#020c18;border:1px solid var(--brd,#1e293b);border-radius:10px;padding:13px;margin-bottom:8px;font-size:13px;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;transition:border-color .3s">—</div>
       <button onclick="baglantiTesti()" style="width:100%;padding:13px;border-radius:10px;border:1px solid var(--brd,#1e293b);background:var(--surf,#041428);color:var(--txt,#e2e8f0);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px">🔗 Önce Bağlantıyı Test Et</button>
       <a href="${SAIS_APK_URL}" class="btn btn-apk">⬇️ SAİS Sorumlusu APK İndir</a>
-    </div>`;
+    </div>` : '');
 }
 
 /* ── GAS Bağlantı Testi ────────────────────────────────── */
@@ -865,11 +865,18 @@ function iosKisayoluIndir(id) {
 </dict></plist>`;
   const blob = new Blob([plist], {type:'application/octet-stream'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href=url; a.download='SIM-SMS-Ilet-'+id+'.shortcut';
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a); URL.revokeObjectURL(url);
-  toast('Kısayol indiriliyor...');
+  if (isIOS()) {
+    // iOS Safari <a download> desteklemiyor — Kısayollar uygulaması window.open ile açılır
+    window.open(url, '_blank');
+    toast('Kısayollar uygulamasında açılıyor...');
+    setTimeout(() => URL.revokeObjectURL(url), 8000);
+  } else {
+    const a = document.createElement('a');
+    a.href=url; a.download='SIM-SMS-Ilet-'+id+'.shortcut';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    toast('Kısayol indiriliyor...');
+  }
 }
 
 /* ── Admin Login ───────────────────────────────────────── */
