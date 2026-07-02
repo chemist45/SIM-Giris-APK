@@ -84,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
         s.setAllowFileAccess(true);
         s.setAllowContentAccess(true);
         s.setAllowFileAccessFromFileURLs(true);
-        s.setAllowUniversalAccessFromFileURLs(true);
+        // setAllowUniversalAccessFromFileURLs KALDIRILDI (güvenlik): APK modunda
+        // tüm GAS trafiği AndroidBridge.gasPost/pingGas üzerinden gidiyor, file://
+        // sayfadan cross-origin XHR gerekmiyor. iframe yüklemesi bu flag'e bağlı değil.
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
         s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         s.setSupportMultipleWindows(false);
