@@ -14,7 +14,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 public class SmsReceiver extends BroadcastReceiver {
     private static final String TAG = "SmsReceiver";
@@ -60,6 +62,12 @@ public class SmsReceiver extends BroadcastReceiver {
             final String gonderenFinal = gonderen != null ? gonderen : "";
             Log.d(TAG, "SMS alındı | Gönderen: " + gonderenFinal + " | İçerik: " + icerik);
 
+            if (!bakanlikSmsMi(gonderenFinal, icerik)) {
+                Log.d(TAG, "SMS filtrelendi — bakanlık/doğrulama deseni yok, cihazdan çıkmadı.");
+                pending.finish();
+                return;
+            }
+
             SharedPreferences prefs = context.getSharedPreferences(AndroidBridge.PREFS, Context.MODE_PRIVATE);
             final String aktivTesis = prefs.getString("activeTesis", "");
 
@@ -74,6 +82,37 @@ public class SmsReceiver extends BroadcastReceiver {
             Log.e(TAG, "onReceive hata: " + t.getMessage());
             pending.finish();
         }
+    }
+
+    // ── Bakanlık SMS filtresi ────────────────────────────────────────────
+    // Yalnızca SİM (Çevre Bakanlığı) doğrulama SMS'leri sisteme iletilir;
+    // kişisel mesajlar cihazdan çıkmaz. Gönderen adı operatöre göre
+    // değişebildiğinden tek bir isme bağlanılmaz; kural iki koşulludur:
+    //   1) mesajda 4-8 haneli bir kod bulunmalı, VE
+    //   2) gönderen adında veya mesaj metninde bakanlık/doğrulama ifadesi geçmeli.
+    private static final Pattern KOD_DESENI = Pattern.compile("(^|\\D)\\d{4,8}(\\D|$)");
+    private static final String[] ANAHTARLAR = {
+        "csb", "cevre", "sehircilik", "iklim", "sim.csb",
+        "dogrulama", "onay kodu", "guvenlik kodu", "giris kodu",
+        "sms kodu", "tek kullanimlik"
+    };
+
+    static boolean bakanlikSmsMi(String gonderen, String icerik) {
+        String metinIcerik = normalize(icerik);
+        if (!KOD_DESENI.matcher(metinIcerik).find()) return false;
+        String metin = normalize(gonderen) + " " + metinIcerik;
+        for (String anahtar : ANAHTARLAR) {
+            if (metin.contains(anahtar)) return true;
+        }
+        return false;
+    }
+
+    // Türkçe karakterleri sadeleştir (Doğrulama/DOGRULAMA/doğrulama hepsi eşleşsin)
+    static String normalize(String s) {
+        if (s == null) return "";
+        return s.toLowerCase(new Locale("tr"))
+                .replace('ç', 'c').replace('ğ', 'g').replace('ı', 'i')
+                .replace('ö', 'o').replace('ş', 's').replace('ü', 'u');
     }
 
     private void gasaGonder(String icerik, String gonderen, String aktivTesis, Runnable done) {
