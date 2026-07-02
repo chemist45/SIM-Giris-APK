@@ -16,6 +16,9 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +44,17 @@ public class MainActivity extends AppCompatActivity {
         smsSivisiniBaslat();
 
         webView = findViewById(R.id.webView);
+
+        // Android 15/16 (targetSdk 35) zorunlu edge-to-edge: sistem çubukları +
+        // klavye inset'lerini WebView'a padding olarak uygula — üst şerit status
+        // bar altında kalmasın. Android 14 ve altında insets 0 gelir, etkisizdir.
+        ViewCompat.setOnApplyWindowInsetsListener(webView, (v, insets) -> {
+            Insets bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
+
         webViewAyarla();
         webView.loadUrl("file:///android_asset/sim-giris.html");
 

@@ -5,9 +5,12 @@
     android:orientation="vertical"
     android:background="#020c18">
 
+    <!-- background: edge-to-edge inset padding alanı WebView'ın kendi arka
+         planını gösterir — beyaz şerit olmasın diye uygulama rengiyle aynı. -->
     <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#020c18"/>
 
 </LinearLayout>
